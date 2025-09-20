@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="007-check-users-role" author="nikita">
+        <sql>
+            ALTER TABLE users
+            ADD CONSTRAINT chk_users_role CHECK ( role IN ('ADMIN','USER') )
+        </sql>
+    </changeSet>
+    <changeSet id="008-index-users-role" author="nikita">
+        <createIndex tableName="users" indexName="idx_users_role">
+            <column name="role"/>
+        </createIndex>
+    </changeSet>
+
+
+    <changeSet id="009-unique-cards-pan" author="nikita">
+        <addUniqueConstraint tableName="cards" columnNames="pan_encrypted"
+                             constraintName="uk_cards_pan_encrypted"/>
+    </changeSet>
+
+    <changeSet id="010-check-cards" author="nikita">
+        <sql>
+            ALTER TABLE cards
+            ADD CONSTRAINT chk_cards_status CHECK (status IN ('ACTIVE','BLOCKED','EXPIRED')),
+            ADD CONSTRAINT chk_cards_expiry_month CHECK (expiry_month BETWEEN 1 AND 12),
+            ADD CONSTRAINT chk_cards_expiry_year CHECK (expiry_year BETWEEN 2000 AND 2100),
+            ADD CONSTRAINT chk_cards_balance_nonneg CHECK (balance_minor >= 0),
+            ADD CONSTRAINT chk_cards_currency_len CHECK (char_length(currency) = 3);
+        </sql>
+    </changeSet>
+
+    <changeSet id="011-index-cards" author="nikita">
+        <createIndex tableName="cards" indexName="idx_cards_user_id"><column name="user_id"/></createIndex>
+        <createIndex tableName="cards" indexName="idx_cards_status"><column name="status"/></createIndex>
+        <createIndex tableName="cards" indexName="idx_cards_last4"><column name="pan_last4"/></createIndex>
+        <createIndex tableName="cards" indexName="idx_cards_created_at"><column name="created_at"/></createIndex>
+    </changeSet>
+
+
+    <changeSet id="012-check-transfers" author="nikita">
+        <sql>
+            ALTER TABLE transfers
+            ADD CONSTRAINT chk_transfers_amount_pos CHECK (amount_minor > 0),
+            ADD CONSTRAINT chk_transfers_currency_len CHECK (char_length(currency) = 3),
+            ADD CONSTRAINT chk_transfers_status CHECK (status IN ('PENDING','SUCCESS','FAILED'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="013-index-transfers" author="nikita">
+        <createIndex tableName="transfers" indexName="idx_transfers_from_card"><column name="from_card_id"/></createIndex>
+        <createIndex tableName="transfers" indexName="idx_transfers_to_card"><column name="to_card_id"/></createIndex>
+        <createIndex tableName="transfers" indexName="idx_transfers_created_at"><column name="created_at"/></createIndex>
+    </changeSet>
+
+</databaseChangeLog>
