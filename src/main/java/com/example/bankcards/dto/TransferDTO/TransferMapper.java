@@ -16,7 +16,7 @@ public interface TransferMapper {
             @Mapping(target = "toCard", source= "toCard"),
             @Mapping(target= "amountMinor", source = "dto.amountMinor"),
             @Mapping(target = "currency", source= "dto.currency"),
-            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "transferStatus", ignore = true),
             @Mapping(target = "createdAt", ignore = true)
     })
     Transfer toEntity(Card fromCard, Card toCard, CreateTransferRequest dto);

@@ -27,7 +27,7 @@ public interface CardMapper {
 
     @Mappings({
             @Mapping(target = "userId", source = "user.id"),
-            @Mapping(target = "panMasked", ignore = true)
+            @Mapping(target= "panEncrypted", ignore = true)
     })
     CardResponse toResponse(Card card);
 

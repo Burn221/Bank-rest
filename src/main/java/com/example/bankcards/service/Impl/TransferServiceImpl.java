@@ -39,7 +39,7 @@ public class TransferServiceImpl implements TransferService {
 
         if(!fromCard.getCurrency().equals(toCard.getCurrency())) throw new ForbiddenTransactionException("Transfer to the same card are forbidden");
         if(!fromCard.getStatus().equals(Status.ACTIVE) || !toCard.getStatus().equals(Status.ACTIVE) ) throw new ForbiddenTransactionException("Card is not active");
-
+        if(!fromCard.getUser().getId().equals(toCard.getUser().getId()) || !fromCard.getUser().getId().equals(userId) || !toCard.getUser().getId().equals(userId)) throw new ForbiddenTransactionException("Transaction must be between same user card");
         if(fromCard.getBalanceMinor()<dto.amountMinor()) throw new ForbiddenTransactionException("Your card has not enough money fr transaction");
 
         fromCard.setBalanceMinor(fromCard.getBalanceMinor()-dto.amountMinor());
@@ -49,11 +49,12 @@ public class TransferServiceImpl implements TransferService {
         cardRepository.save(toCard);
 
         Transfer transfer= mapper.toEntity(fromCard,toCard,dto);
-        transfer.setCurrency("KZT");
+        transfer.setCurrency(fromCard.getCurrency());
         transfer.setTransferStatus(TransferStatus.SUCCESS);
         transfer.setCreatedAt(LocalDateTime.now());
 
-        return mapper.toResponse(transfer);
+
+        return mapper.toResponse(transferRepository.save(transfer));
 
 
     }

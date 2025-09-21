@@ -46,6 +46,7 @@ public class Card {
     @Column(name = "currency", nullable = false)
     private String currency;
 
+    @Version
     @Column(name = "version", nullable = false)
     private Long version;
 
