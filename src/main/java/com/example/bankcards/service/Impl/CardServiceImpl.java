@@ -159,7 +159,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardResponse getMyCardUser(Long cardId, Long userId) {
-        Card card= cardRepository.findByIdAndUser_id(cardId, userId)
+        Card card= cardRepository.findByIdAndUser_Id(cardId, userId)
                 .orElseThrow(()-> new NotFoundException("Card not found"));
 
         CardResponse response= mapper.toResponse(card);

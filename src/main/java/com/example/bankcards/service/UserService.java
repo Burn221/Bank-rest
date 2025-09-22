@@ -20,7 +20,11 @@ public interface UserService {
 
     void deleteUser(Long userId);
 
-    UserResponse findUserByUsername(String username);
+    UserResponse getUserByUsername(String username);
+
+    UserResponse disableUser(Long userId);
+
+    UserResponse activateUser(Long userId);
 
 
 }

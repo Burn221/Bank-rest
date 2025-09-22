@@ -136,7 +136,7 @@ public class JwtService {
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("uid", user.getId())
-                .claim("roles", user.getRole().name())
+                .claim("role", user.getRole().name())
                 .setExpiration(date)
                 .signWith(getSignInKey())
                 .compact();

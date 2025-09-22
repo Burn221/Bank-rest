@@ -2,13 +2,14 @@ package com.example.bankcards.dto.TransferDTO;
 
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.Transfer;
+import com.example.bankcards.entity.enums.TransferStatus;
 import java.time.LocalDateTime;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-09-20T22:01:44+0600",
+    date = "2025-09-23T04:37:42+0600",
     comments = "version: 1.6.3, compiler: javac, environment: Java 23.0.1 (Oracle Corporation)"
 )
 @Component
@@ -43,7 +44,7 @@ public class TransferMapperImpl implements TransferMapper {
         Long id = null;
         Long amountMinor = null;
         String currency = null;
-        String transferStatus = null;
+        TransferStatus transferStatus = null;
         LocalDateTime createdAt = null;
 
         fromCardId = transferFromCardId( transfer );
@@ -51,9 +52,7 @@ public class TransferMapperImpl implements TransferMapper {
         id = transfer.getId();
         amountMinor = transfer.getAmountMinor();
         currency = transfer.getCurrency();
-        if ( transfer.getTransferStatus() != null ) {
-            transferStatus = transfer.getTransferStatus().name();
-        }
+        transferStatus = transfer.getTransferStatus();
         createdAt = transfer.getCreatedAt();
 
         TransferResponse transferResponse = new TransferResponse( id, fromCardId, toCardId, amountMinor, currency, transferStatus, createdAt );

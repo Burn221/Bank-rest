@@ -5,6 +5,8 @@ import com.example.bankcards.dto.JwtDTO.RefreshTokenDto;
 import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
 import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.service.Impl.UserServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +22,13 @@ import javax.naming.AuthenticationException;
 @AllArgsConstructor
 @RequestMapping("/api/auth")
 @Validated
+@Tag(name="Authentication Controller", description = "Controller for authentication and token refreshing")
 public class AuthController {
 
     private UserServiceImpl userService;
 
-    @PostMapping("/login")
-    public String createUser(@Valid @RequestBody CreateUserRequest request){
 
-        return userService.createUser(request);
-
-    }
-
+    @Operation(summary = "Sign in using JWT token")
     @PostMapping("/sign-in")
     public ResponseEntity<JwtAuthDto> signIn(@RequestBody UserCredentialsDto dto) throws AuthenticationException{
 
@@ -46,6 +44,7 @@ public class AuthController {
 
     }
 
+    @Operation(summary = "Refresh JWT token")
     @PostMapping("/refresh")
     public JwtAuthDto refresh(@RequestBody RefreshTokenDto dto) throws Exception{
 

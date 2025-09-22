@@ -6,6 +6,7 @@ import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
 import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.dto.userdto.UserResponse;
 import com.example.bankcards.entity.User;
+import com.example.bankcards.exception.ActivatedException;
 import com.example.bankcards.exception.DisabledException;
 import com.example.bankcards.exception.ForbiddenTransactionException;
 import com.example.bankcards.exception.NotFoundException;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     private JwtService jwtService;
 
+    @Transactional
     @Override
     public JwtAuthDto signIn(UserCredentialsDto dto) throws AuthenticationException{
         User user= findByCredentials(dto);
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
         return jwtService.generateAuthToken(user.getUsername());
     }
 
+    @Transactional
     @Override
     public JwtAuthDto refreshToken(RefreshTokenDto dto) throws AuthenticationException {
         String refreshToken= dto.getRefreshToken();
@@ -73,13 +76,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         User user= repository.findById(userId).orElseThrow(()-> new UsernameNotFoundException("User not found"));
-        if (!user.isEnabled()) throw new DisabledException("User is not active");
+        if (user.isEnabled()) throw new ActivatedException("User has to be disabled");
         repository.deleteById(userId);
 
     }
 
     @Override
-    public UserResponse findUserByUsername(String username) {
+    public UserResponse getUserByUsername(String username) {
         User user= repository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException("User not found"));
 
@@ -95,6 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
     private User findByCredentials(UserCredentialsDto dto) throws AuthenticationException{
         Optional<User> optionalUser= repository.findByUsername(dto.getUsername());
 
@@ -107,6 +111,45 @@ public class UserServiceImpl implements UserService {
 
         throw new AuthenticationException("Username or password is incorrect");
 
+    }
+
+    @Transactional
+    @Override
+    public UserResponse disableUser(Long userId) {
+        User user= repository.findById(userId)
+                .orElseThrow(()-> new UsernameNotFoundException("Username not found"));
+
+        user.setEnabled(false);
+
+        repository.save(user);
+
+        UserResponse response= new UserResponse();
+        response.setUsername(user.getUsername());
+        response.setRole(user.getRole());
+        response.setEnabled(user.isEnabled());
+        response.setCreatedAt(user.getCreatedAt());
+
+        return response;
+    }
+
+    @Transactional
+    @Override
+    public UserResponse activateUser(Long userId) {
+
+        User user= repository.findById(userId)
+                .orElseThrow(()-> new UsernameNotFoundException("Username not found"));
+
+        user.setEnabled(true);
+
+        repository.save(user);
+
+        UserResponse response= new UserResponse();
+        response.setUsername(user.getUsername());
+        response.setRole(user.getRole());
+        response.setEnabled(user.isEnabled());
+        response.setCreatedAt(user.getCreatedAt());
+
+        return response;
     }
 
 

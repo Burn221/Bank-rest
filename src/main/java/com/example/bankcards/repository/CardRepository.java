@@ -32,7 +32,7 @@ public interface CardRepository extends JpaRepository<Card,Long> {
                                          org.springframework.data.domain.Pageable pageable
                                          );
 
-    Optional<Card> findByIdAndUser_id(Long cardId, Long userId);
+    Optional<Card> findByIdAndUser_Id(Long cardId, Long userId);
 
     Page<Card> findByUser_Id(Long userId, Pageable pageable);
 
@@ -41,8 +41,8 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     select c.balanceMinor, c.currency from Card c
     where(c.id=:cardId) and (c.user.id=:userId)
 """)
-    Optional <BalanceResponse> findBalanceUser(@Param("cardId") Long cardId,
-                                    @Param("userId") Long userId);
+    Optional <BalanceResponse> findBalanceUser(@Param("cardId") Long userId,
+                                    @Param("userId") Long cardId);
 
 
 

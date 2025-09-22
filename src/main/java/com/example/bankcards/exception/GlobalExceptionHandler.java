@@ -39,6 +39,14 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ActivatedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorResponse> handleActivatedException(ActivatedException exception, HttpServletRequest request){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.FORBIDDEN.value(), LocalDateTime.now())
+        );
+    }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception, HttpServletRequest request){

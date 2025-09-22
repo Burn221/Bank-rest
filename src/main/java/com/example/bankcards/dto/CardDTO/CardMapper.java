@@ -13,8 +13,6 @@ public interface CardMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "user", source = "user"),
             @Mapping(target = "ownerName", source = "dto.ownerName"),
-            @Mapping(target = "expiryMonth", source = "dto.expiryMonth"),
-            @Mapping(target = "expiryYear", source = "dto.expiryYear"),
             @Mapping(target = "currency", source = "dto.currency"),
             @Mapping(target = "status", constant = "ACTIVE"),
             @Mapping(target = "balanceMinor", constant = "0L"),
@@ -27,7 +25,7 @@ public interface CardMapper {
 
     @Mappings({
             @Mapping(target = "userId", source = "user.id"),
-            @Mapping(target= "panEncrypted", ignore = true)
+
     })
     CardResponse toResponse(Card card);
 
