@@ -1,5 +1,6 @@
 package com.example.bankcards.dto.CardDTO;
 
+import com.example.bankcards.entity.enums.Status;
 import jdk.jfr.DataAmount;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class CardResponse{
     String panPlain;
     Short expiryMonth;
     Short expiryYear;
-    String status;
+    Status status;
     Long balanceMinor;
     String currency;
     LocalDateTime createdAt;

@@ -24,3 +24,5 @@ spring:
 
     show-sql: true
     generate-ddl: false
+
+
