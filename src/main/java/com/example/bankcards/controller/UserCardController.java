@@ -8,8 +8,8 @@ import com.example.bankcards.dto.userdto.AuthUser;
 import com.example.bankcards.service.Impl.CardServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class UserCardController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping
     public ResponseEntity<CardResponse> createMyCard(@AuthenticationPrincipal AuthUser me,
-                                                       CreateCardRequest request){
+                                                       @RequestBody @Valid CreateCardRequest request){
 
         CardResponse response= cardService.createCardUser(me.id(),request);
 
@@ -45,8 +45,8 @@ public class UserCardController {
     @Operation(summary = "Get all current user cards")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping
-    public ResponseEntity<Page<CardResponse>> showMyCard(@AuthenticationPrincipal AuthUser me,
-                                                         Pageable pageable){
+    public ResponseEntity<Page<CardResponse>> showMyCards(@AuthenticationPrincipal AuthUser me,
+                                                          Pageable pageable){
 
 
         return ResponseEntity.ok(cardService.showMyCardsUser(me.id(), pageable));

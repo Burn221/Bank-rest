@@ -45,15 +45,15 @@ public class CardServiceImpl implements CardService {
 
         String generatedPan= PanGenerator.generatePan();
 
-        Card card= new Card();
+        Card card= mapper.toEntity(dto, user);
         card.setUser(user);
         card.setPanEncrypted(AesGcm.encryptToBase64(generatedPan));
         card.setPanLast4(generatedPan.substring(generatedPan.length() - 4));
-        card.setOwnerName(dto.ownerName());
+
         card.setExpiryMonth((short) LocalDateTime.now().getMonthValue());
         card.setExpiryYear( (short) (LocalDateTime.now().getYear()+ 3) );
         card.setStatus(Status.ACTIVE);
-        card.setCurrency(dto.currency());
+
         card.setCreatedAt(LocalDateTime.now());
 
         return mapper.toResponse(cardRepository.save(card));
@@ -76,6 +76,11 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public void deleteCardAdmin(Long cardId) {
+
+        Card card= cardRepository.findById(cardId)
+                .orElseThrow(()-> new NotFoundException("Card not found"));
+
+        if (card.getStatus().equals(Status.ACTIVE)) throw new ForbiddenTransactionException("Card must be disabled to be deleted");
         cardRepository.deleteById(cardId);
 
     }
@@ -134,15 +139,14 @@ public class CardServiceImpl implements CardService {
 
         String generatedPan= PanGenerator.generatePan();
 
-        Card card= new Card();
+        Card card= mapper.toEntity(dto,user);
+
         card.setUser(user);
         card.setPanEncrypted(AesGcm.encryptToBase64(generatedPan));
         card.setPanLast4(generatedPan.substring(generatedPan.length() - 4));
-        card.setOwnerName(dto.ownerName());
         card.setExpiryMonth((short) LocalDateTime.now().getMonthValue());
         card.setExpiryYear( (short) (LocalDateTime.now().getYear()+ 3) );
         card.setStatus(Status.ACTIVE);
-        card.setCurrency(dto.currency());
         card.setCreatedAt(LocalDateTime.now());
 
         cardRepository.save(card);
@@ -160,6 +164,7 @@ public class CardServiceImpl implements CardService {
                     String last4 = card.getPanLast4();
                     CardResponse dto = mapper.toResponse(card);
                     dto.setPanMasked("**** **** **** " + last4);
+                    dto.setPanPlain(AesGcm.decryptFromBase64(card.getPanEncrypted()));
                     return dto;
                 });
 

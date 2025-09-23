@@ -44,8 +44,10 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     select c.balanceMinor, c.currency from Card c
     where(c.id=:cardId) and (c.user.id=:userId)
 """)
-    Optional <BalanceResponse> findBalanceUser(@Param("cardId") Long userId,
-                                    @Param("userId") Long cardId);
+    Optional <BalanceResponse> findBalanceUser(
+            @Param("userId") Long userId,
+            @Param("cardId") Long cardId
+                                    );
 
 
 
