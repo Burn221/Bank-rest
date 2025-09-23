@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -84,9 +85,11 @@ public class AdminCardController {
     @Operation(summary = "Get all card with parameters")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping()
-    public ResponseEntity<?> list(Pageable pageable, @RequestParam(required = false) Long userId,
-                                  @RequestParam(required = false) Status status,
-                                  @RequestParam(required = false) String last4 ){
+    public ResponseEntity<Page<CardResponse>> list(Pageable pageable, @RequestParam(required = false) Long userId,
+                                                  @RequestParam(required = false) Status status,
+                                                  @RequestParam(required = false) String last4 ){
+
+
 
         return ResponseEntity.ok(
                 cardService.showAllCardsAdmin(pageable,userId,status,last4));

@@ -23,18 +23,21 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     select c from Card c
     where (:userId is null or c.user.id=:userId)
     and (:status is null or c.status=:status)
-    and (:last4 is null or c.panLast4 like concat('%',:last4,'%'))
+    and (:last4 is null or c.panLast4=:last4)
 """)
 
     Page<Card> findAdminFiltered(@Param("userId") Long userId,
                                          @Param("status") Status status,
                                          @Param("last4") String last4,
-                                         org.springframework.data.domain.Pageable pageable
+                                         Pageable pageable
                                          );
 
     Optional<Card> findByIdAndUser_Id(Long cardId, Long userId);
 
     Page<Card> findByUser_Id(Long userId, Pageable pageable);
+
+    boolean existsByUser_Id(Long userId);
+
 
 
     @Query("""

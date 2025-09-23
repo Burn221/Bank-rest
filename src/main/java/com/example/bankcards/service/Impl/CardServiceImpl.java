@@ -107,14 +107,22 @@ public class CardServiceImpl implements CardService {
     @Override
     public Page<CardResponse> showAllCardsAdmin(Pageable pageable, Long userId, Status status, String last4) {
         return cardRepository.findAdminFiltered(userId,status,last4,pageable)
-                .map(mapper::toResponse);
+                .map(card -> {
+                    CardResponse dto = mapper.toResponse(card);
+                    dto.setPanMasked(Mask.mask(card.getPanLast4()));
+                    return dto;
+                });
     }
 
 
 
     @Override
     public CardResponse getByIdAdmin(Long cardId) {
-        return mapper.toResponse(cardRepository.findById(cardId).orElseThrow(()-> new NotFoundException("Card not found")));
+        Card card=cardRepository.findById(cardId).orElseThrow(()-> new NotFoundException("Card not found"));
+        CardResponse response= mapper.toResponse(card);
+
+        response.setPanMasked(Mask.mask(card.getPanLast4()));
+        return response;
 
     }
 
