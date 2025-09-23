@@ -56,7 +56,10 @@ public class CardServiceImpl implements CardService {
 
         card.setCreatedAt(LocalDateTime.now());
 
-        return mapper.toResponse(cardRepository.save(card));
+        CardResponse response= mapper.toResponse(cardRepository.save(card));
+        response.setPanMasked(Mask.mask(card.getPanLast4()));
+
+        return response;
     }
 
 
@@ -69,7 +72,10 @@ public class CardServiceImpl implements CardService {
 
         card.setOwnerName(dto.ownerName());
 
-        return mapper.toResponse(cardRepository.save(card));
+        CardResponse response= mapper.toResponse(cardRepository.save(card));
+        response.setPanMasked(Mask.mask(card.getPanLast4()));
+
+        return response;
     }
 
 
@@ -93,7 +99,10 @@ public class CardServiceImpl implements CardService {
 
         card.setStatus(Status.BLOCKED);
 
-        return mapper.toResponse(cardRepository.save(card));
+        CardResponse response= mapper.toResponse(cardRepository.save(card));
+        response.setPanMasked(Mask.mask(card.getPanLast4()));
+
+        return response;
     }
 
     @Override
@@ -104,7 +113,10 @@ public class CardServiceImpl implements CardService {
 
         card.setStatus(Status.ACTIVE);
 
-        return mapper.toResponse(cardRepository.save(card));
+        CardResponse response= mapper.toResponse(cardRepository.save(card));
+        response.setPanMasked(Mask.mask(card.getPanLast4()));
+
+        return response;
     }
 
 
@@ -127,6 +139,7 @@ public class CardServiceImpl implements CardService {
         CardResponse response= mapper.toResponse(card);
 
         response.setPanMasked(Mask.mask(card.getPanLast4()));
+        response.setPanPlain(AesGcm.decryptFromBase64(card.getPanEncrypted()));
         return response;
 
     }
