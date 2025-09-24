@@ -5,7 +5,7 @@ import com.example.bankcards.dto.JwtDTO.RefreshTokenDto;
 import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
 import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.dto.userdto.UserResponse;
-import com.example.bankcards.entity.User;
+
 
 import javax.naming.AuthenticationException;
 

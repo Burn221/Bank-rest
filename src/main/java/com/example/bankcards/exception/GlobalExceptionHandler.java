@@ -1,11 +1,14 @@
 package com.example.bankcards.exception;
 
+import com.example.bankcards.exception.exceptions.ActivatedException;
+import com.example.bankcards.exception.exceptions.DisabledException;
+import com.example.bankcards.exception.exceptions.ForbiddenTransactionException;
+import com.example.bankcards.exception.exceptions.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

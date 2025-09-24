@@ -3,7 +3,6 @@ package com.example.bankcards.security.jwt;
 import com.example.bankcards.dto.userdto.AuthUser;
 import com.example.bankcards.entity.enums.Role;
 import com.example.bankcards.security.CustomUserDetailsService;
-import com.example.bankcards.service.Impl.UserServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

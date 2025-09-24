@@ -3,8 +3,8 @@ package com.example.bankcards.security.jwt;
 import com.example.bankcards.dto.JwtDTO.JwtAuthDto;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.entity.enums.Role;
-import com.example.bankcards.exception.DisabledException;
-import com.example.bankcards.exception.NotFoundException;
+import com.example.bankcards.exception.exceptions.DisabledException;
+import com.example.bankcards.exception.exceptions.NotFoundException;
 import com.example.bankcards.repository.UserRepository;
 
 import io.jsonwebtoken.*;

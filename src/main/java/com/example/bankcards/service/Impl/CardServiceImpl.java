@@ -8,15 +8,15 @@ import com.example.bankcards.dto.CardDTO.UpdateCardRequest;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.entity.enums.Status;
-import com.example.bankcards.exception.ForbiddenTransactionException;
-import com.example.bankcards.exception.NotFoundException;
+import com.example.bankcards.exception.exceptions.ActivatedException;
+import com.example.bankcards.exception.exceptions.ForbiddenTransactionException;
+import com.example.bankcards.exception.exceptions.NotFoundException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.service.CardService;
 import com.example.bankcards.util.AesGcm;
 import com.example.bankcards.util.Mask;
 import com.example.bankcards.util.PanGenerator;
-import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -86,7 +85,7 @@ public class CardServiceImpl implements CardService {
         Card card= cardRepository.findById(cardId)
                 .orElseThrow(()-> new NotFoundException("Card not found"));
 
-        if (card.getStatus().equals(Status.ACTIVE)) throw new ForbiddenTransactionException("Card must be disabled to be deleted");
+        if (card.getStatus().equals(Status.ACTIVE)) throw new ActivatedException("Card must be disabled to be deleted");
         cardRepository.deleteById(cardId);
 
     }

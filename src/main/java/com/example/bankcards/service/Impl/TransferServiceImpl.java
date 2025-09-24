@@ -7,8 +7,8 @@ import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.Transfer;
 import com.example.bankcards.entity.enums.Status;
 import com.example.bankcards.entity.enums.TransferStatus;
-import com.example.bankcards.exception.ForbiddenTransactionException;
-import com.example.bankcards.exception.NotFoundException;
+import com.example.bankcards.exception.exceptions.ForbiddenTransactionException;
+import com.example.bankcards.exception.exceptions.NotFoundException;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.TransferRepository;
 import com.example.bankcards.service.TransferService;
@@ -16,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.time.LocalDateTime;
 
 @Service

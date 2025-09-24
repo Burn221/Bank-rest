@@ -5,11 +5,9 @@ import com.example.bankcards.entity.User;
 import com.example.bankcards.entity.enums.Role;
 import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
-import com.example.bankcards.service.CardService;
 import com.example.bankcards.service.Impl.CardServiceImpl;
 import com.example.bankcards.service.Impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;
-import java.time.Year;
+
 
 @Component
 @Profile("dev")

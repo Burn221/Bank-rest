@@ -1,7 +1,6 @@
 package com.example.bankcards.repository;
 
 import com.example.bankcards.dto.BalanceResponse;
-import com.example.bankcards.dto.CardDTO.CardResponse;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.enums.Status;
 import jakarta.persistence.LockModeType;
@@ -12,8 +11,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Repository

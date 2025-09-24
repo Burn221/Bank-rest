@@ -53,7 +53,7 @@ public class AdminUserController {
     @PatchMapping("/activate/{userId}")
     public ResponseEntity<UserResponse> activateUser(@PathVariable Long userId){
 
-        return ResponseEntity.ok(userService.disableUser(userId));
+        return ResponseEntity.ok(userService.activateUser(userId));
     }
 
 

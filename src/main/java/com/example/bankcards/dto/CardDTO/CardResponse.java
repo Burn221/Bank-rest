@@ -1,7 +1,6 @@
 package com.example.bankcards.dto.CardDTO;
 
 import com.example.bankcards.entity.enums.Status;
-import jdk.jfr.DataAmount;
 import lombok.Data;
 
 import java.time.LocalDateTime;
