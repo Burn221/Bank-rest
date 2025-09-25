@@ -29,7 +29,7 @@ public class JwtService {
 
     private static final Logger LOGGER= LogManager.getLogger(JwtService.class);
 
-    @Value("580b56f78bf8a923c94180d283bec4b4cfe8e498316a498683e518b469b3433a")
+    @Value("${JWT_SECRET_TOKEN}")
     private String jwtSecret;
 
     public JwtAuthDto generateAuthToken(String username){
