@@ -1,7 +1,37 @@
-image: maven:3.9.9-eclipse-temurin-17
+variables:
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
 
-build:
+image: maven:latest
+
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+cache:
+  paths:
+    - .m2.repository
+    - target
+
+build_job:
   stage: build
+  tags:
+    - [docker]
   script:
     - mvn compile
+
+test_job:
+  stage: test
+  tags:
+    - [ docker ]
+  script:
+    - mvn test
+
+package_job:
+  stage: package
+  tags:
+    - [ docker ]
+  script:
+    - mvn package
 
