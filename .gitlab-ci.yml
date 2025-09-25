@@ -16,22 +16,19 @@ cache:
 
 build_job:
   stage: build
-  tags:
-    - ["docker"]
+ 
   script:
     - mvn compile
 
 test_job:
   stage: test
-  tags:
-    - ["docker"]
+
   script:
     - mvn test
 
 package_job:
   stage: package
-  tags:
-    - ["docker"]
+
   script:
     - mvn package
 
