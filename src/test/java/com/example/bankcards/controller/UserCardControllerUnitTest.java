@@ -3,20 +3,18 @@ package com.example.bankcards.controller;
 import com.example.bankcards.dto.BalanceResponse;
 import com.example.bankcards.dto.CardDTO.CardResponse;
 import com.example.bankcards.dto.CardDTO.CreateCardRequest;
-import com.example.bankcards.dto.JwtDTO.JwtAuthDto;
-import com.example.bankcards.dto.JwtDTO.RefreshTokenDto;
-import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
+
 import com.example.bankcards.dto.userdto.AuthUser;
 import com.example.bankcards.entity.enums.Status;
 import com.example.bankcards.security.CustomUserDetailsService;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.Impl.CardServiceImpl;
-import com.example.bankcards.service.Impl.UserServiceImpl;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,9 +42,6 @@ public class UserCardControllerUnitTest {
 
     @Autowired
     MockMvc mockMvc;
-    @Autowired
-    ObjectMapper objectMapper;
-
     @MockitoBean
     CardServiceImpl cardService;
     @MockitoBean

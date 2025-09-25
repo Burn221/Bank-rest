@@ -1,5 +1,6 @@
 variables:
   MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+  SPRING_PROFILES_ACTIVE: "ci"
 
 image: maven:latest
 
@@ -11,12 +12,12 @@ stages:
 
 cache:
   paths:
-    - .m2.repository
+    - .m2/repository
     - target
 
 build_job:
   stage: build
- 
+
   script:
     - mvn compile
 

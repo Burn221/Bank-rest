@@ -35,8 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserTransferControllerUnitTest {
 
     @Autowired MockMvc mockMvc;
-    @Autowired ObjectMapper objectMapper;
-
     @MockitoBean
     TransferServiceImpl transferService;
     @MockitoBean JwtService jwtService;

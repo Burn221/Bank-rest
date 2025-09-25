@@ -44,8 +44,6 @@ public class AdminCardControllerUnitTest {
 
     @Autowired
     MockMvc mockMvc;
-    @Autowired
-    ObjectMapper objectMapper;
     @MockitoBean
     CardServiceImpl cardService;
     @MockitoBean

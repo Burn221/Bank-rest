@@ -30,8 +30,6 @@ public class AdminUserControllerUnitTest {
 
     @Autowired
     MockMvc mockMvc;
-    @Autowired
-    ObjectMapper objectMapper;
     @MockitoBean
     UserServiceImpl userService;
     @MockitoBean

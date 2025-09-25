@@ -27,8 +27,6 @@ import javax.naming.AuthenticationException;
 public class AuthControllerUnitTest {
 
     @Autowired MockMvc mockMvc;
-    @Autowired ObjectMapper objectMapper;
-
     @MockitoBean UserServiceImpl userService;
     @MockitoBean JwtService jwtService;
     @MockitoBean CustomUserDetailsService customUserDetailsService;
