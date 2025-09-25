@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="014-seed-users-dev" author="nikita" context="dev">
+
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM users WHERE username = 'admin'
+            </sqlCheck>
+        </preConditions>
+
+
+        <insert tableName="users">
+            <column name="id"           valueNumeric="1"/>
+            <column name="username"     value="admin"/>
+            <column name="password"     value="$2a$12$tFoIbP08Afp.kGzussOIWekC0mpBbNndCEdptqxxxz7YUXFbPR2qK"/>
+            <column name="role"         value="ADMIN"/>
+            <column name="enabled"      valueBoolean="true"/>
+            <column name="created_at"   valueComputed="NOW()"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id"           valueNumeric="2"/>
+            <column name="username"     value="user"/>
+            <column name="password"     value="$2a$12$EFvGaOWQODxwE00LE.CATeCAE2Pi8J78PoZt4pYZhp1pbbuQPs/Ua"/>
+            <column name="role"         value="USER"/>
+            <column name="enabled"      valueBoolean="true"/>
+            <column name="created_at"   valueComputed="NOW()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
