@@ -67,7 +67,7 @@ public class TestAdminCardController {
     @Test
     @WithMockUser(roles = "ADMIN")
     @DisplayName("POST /api/admin/cards/create - 201 Created")
-    void createCard() throws Exception {
+    void createCardTest() throws Exception {
         CreateCardRequest dto = new CreateCardRequest(10L, "Nikita", "KZT");
         when(cardService.createCardAdmin(dto)).thenReturn(sample());
         mockMvc.perform(post("/api/admin/cards/create")
