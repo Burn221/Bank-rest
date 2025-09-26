@@ -7,7 +7,7 @@ import com.example.bankcards.entity.enums.Status;
 import com.example.bankcards.security.CustomUserDetailsService;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.Impl.CardServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminCardController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AdminCardControllerUnitTest {
+public class TestAdminCardController {
 
 
     @Autowired

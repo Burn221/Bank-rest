@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TransferServiceImplTest {
+public class TestTransferServiceImpl {
 
     @Mock private TransferRepository transferRepository;
     @Mock private CardRepository cardRepository;

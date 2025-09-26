@@ -6,7 +6,6 @@ import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
 import com.example.bankcards.security.CustomUserDetailsService;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.Impl.UserServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,7 +23,7 @@ import javax.naming.AuthenticationException;
 
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AuthControllerUnitTest {
+public class TestAuthController {
 
     @Autowired MockMvc mockMvc;
     @MockitoBean UserServiceImpl userService;

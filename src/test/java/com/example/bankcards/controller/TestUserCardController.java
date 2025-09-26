@@ -10,7 +10,6 @@ import com.example.bankcards.security.CustomUserDetailsService;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.Impl.CardServiceImpl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserCardController.class)
 
 
-public class UserCardControllerUnitTest {
+public class TestUserCardController {
 
     @Autowired
     MockMvc mockMvc;

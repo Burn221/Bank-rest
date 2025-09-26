@@ -7,7 +7,6 @@ import com.example.bankcards.security.CustomUserDetailsService;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.Impl.TransferServiceImpl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,7 +31,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserTransfersController.class)
-public class UserTransferControllerUnitTest {
+public class TestUserTransferController {
 
     @Autowired MockMvc mockMvc;
     @MockitoBean

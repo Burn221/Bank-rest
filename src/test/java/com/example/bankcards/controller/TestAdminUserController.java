@@ -7,7 +7,6 @@ import com.example.bankcards.entity.enums.Role;
 import com.example.bankcards.security.CustomUserDetailsService;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.Impl.UserServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AdminUserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AdminUserControllerUnitTest {
+public class TestAdminUserController {
 
     @Autowired
     MockMvc mockMvc;
