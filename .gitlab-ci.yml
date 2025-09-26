@@ -13,7 +13,7 @@ stages:
 cache:
   paths:
     - .m2/repository
-    - target
+
 
 build_job:
   stage: build
@@ -25,7 +25,7 @@ test_job:
   stage: test
 
   script:
-    - mvn test
+    - mvn -B -U clean test
 
 package_job:
   stage: package
