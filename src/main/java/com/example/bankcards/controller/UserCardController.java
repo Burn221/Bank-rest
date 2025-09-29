@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+/** Класс контроллер для управления картами пользователем */
 @AllArgsConstructor
 @RestController
 @Validated

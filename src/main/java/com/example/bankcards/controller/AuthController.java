@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.naming.AuthenticationException;
 
+
+/** Класс контроллер реализующий авторизацию пользователя */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/auth")
@@ -25,7 +27,9 @@ public class AuthController {
 
     private UserServiceImpl userService;
 
-
+    /** Метод для авторизации пользователя
+     * @param dto Принимает UserCredentialsDto содержащий информацию о пользователе
+     * @return Возвращает ResponseEntity с кодом 200*/
     @Operation(summary = "Sign in using JWT token")
     @PostMapping("/sign-in")
     public ResponseEntity<JwtAuthDto> signIn(@RequestBody UserCredentialsDto dto) throws AuthenticationException{
@@ -42,6 +46,9 @@ public class AuthController {
 
     }
 
+    /** Метод для обновления JWT токена пользователя
+     * @param dto Принимает RefreshTokenDto содержащий рефреш токен
+     * @return Возвращает ResponseEntity с кодом 200*/
     @Operation(summary = "Refresh JWT token")
     @PostMapping("/refresh")
     public JwtAuthDto refresh(@RequestBody RefreshTokenDto dto) throws Exception{

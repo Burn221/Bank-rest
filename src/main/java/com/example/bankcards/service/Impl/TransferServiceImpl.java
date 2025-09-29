@@ -44,7 +44,8 @@ public class TransferServiceImpl implements TransferService {
      *                        <li>currency - Валюта перевода</li>
      *                        <li>transferStatus - Статус перевода: SUCCESS/FAILED/PENDING</li>
      *                         <li>createdAt - дата и время создания</li>
-     *                   </ul>*/
+     *                   </ul>
+     * @see CardRepository#findForUpdate(Long)  */
     @Override @Transactional
     public TransferResponse executeTransfer(Long userId, CreateTransferRequest dto) {
         if(dto.fromCard().equals(dto.toCard())) throw new ForbiddenTransactionException("Transfer to the same card are forbidden");

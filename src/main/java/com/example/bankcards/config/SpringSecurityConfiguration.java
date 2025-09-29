@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/** Класс отвечающий за конфигурацию Spring Security во всем приложении*/
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -33,13 +36,16 @@ public class SpringSecurityConfiguration {
 
     private final JwtFilter jwtFilter;
 
-
+    /** Bean который возвращает кастомный UserDetailsService
+     * @param impl Принимает наш CustomUSerDetailsService
+     * @return Возвращает CustomUserDetailsService*/
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService(CustomUserDetailsService impl) {
 
-        return new CustomUserDetailsService();
+        return impl;
     }
 
+    /** Конфигурация цепочки фильтров безопасности */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource cors) throws Exception{
         http.httpBasic((AbstractHttpConfigurer::disable))
@@ -63,6 +69,8 @@ public class SpringSecurityConfiguration {
 
     }
 
+    /** CORS конфигурация
+     * @return CorsConfigurationSource */
     @Primary
     @Bean
     CorsConfigurationSource corsConfigurationSource(){
@@ -83,19 +91,17 @@ public class SpringSecurityConfiguration {
     }
 
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
 
+    /** Создает bean необходимый механизму безопасности для аутентификации  */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception{
+        return cfg.getAuthenticationManager();
     }
 
 
 
 
-
+    /** Bean реализующий хэширование паролей */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

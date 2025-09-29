@@ -33,7 +33,9 @@ public class UserServiceImpl implements UserService {
 
     /** Осуществляет авторизацию в систему
      * @param dto Принимает UserCredentialsDto который содержит поля: username, password
-     * @return Возвращает сгенерированый JWT токен авторизации */
+     * @return Возвращает сгенерированый JWT токен авторизации
+     * @see #findByCredentials(UserCredentialsDto)
+     * @see JwtService#generateAuthToken(String) */
     @Transactional
     @Override
     public JwtAuthDto signIn(UserCredentialsDto dto) throws AuthenticationException{
@@ -44,7 +46,9 @@ public class UserServiceImpl implements UserService {
 
     /** Генерирует refresh token авторизации
      * @param dto Принимает RefreshTokenDto который содержит в себе рефреш токен
-     * @return Возвращает JwtAuthDto которая содержит в себе Refresh Token*/
+     * @return Возвращает JwtAuthDto которая содержит в себе Refresh Token
+     * @see JwtService#refreshBaseToken(String, String)
+     * @see UserRepository#findByUsername(String) */
     @Transactional
     @Override
     public JwtAuthDto refreshToken(RefreshTokenDto dto) throws AuthenticationException {
@@ -82,7 +86,8 @@ public class UserServiceImpl implements UserService {
     /** Удалить пользователями
      * @param userId Принимает id пользователя
      * @throws UsernameNotFoundException если username не найден
-     * Ничего не возвращает*/
+     * Ничего не возвращает
+     * @see UserRepository#findById(Object) */
     @Transactional
     @Override
     public void deleteUser(Long userId) {
@@ -116,7 +121,8 @@ public class UserServiceImpl implements UserService {
 
     /** Ищет пользователя по введеным юзернейму и паролю: метод для jwt авторизации
      * @param dto Принимает UserCredentialsDto dto которое содержит поля: username, password
-     * @return Возвращает объект пользователя*/
+     * @return Возвращает объект пользователя
+     * @see UserRepository#findByUsername(String)*/
     private User findByCredentials(UserCredentialsDto dto) throws AuthenticationException{
         Optional<User> optionalUser= repository.findByUsername(dto.getUsername());
 
@@ -157,7 +163,8 @@ public class UserServiceImpl implements UserService {
 
     /** Включает пользователя
      * @param userId Принимает id пользователя
-     * @return Возвращает UserResponse с полями: id, username, role, enabled, createdAt */
+     * @return Возвращает UserResponse с полями: id, username, role, enabled, createdAt
+     * */
     @Transactional
     @Override
     public UserResponse activateUser(Long userId) {

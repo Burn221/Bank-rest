@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+/** Класс отвечающий за основную логику работу JWT, генерацию, рефреш и т.д */
 @Component
 public class JwtService {
 
@@ -29,9 +30,18 @@ public class JwtService {
 
     private static final Logger LOGGER= LogManager.getLogger(JwtService.class);
 
+    /** секретный ключ для токена, значение получается из переменных окружения */
     @Value("${JWT_SECRET_TOKEN}")
     private String jwtSecret;
 
+
+    /** Метод отвечающий за генерацию токена авторизации(Содержит JWT и Refresh токены)
+     * @param username Принимает имя пользователя
+     * @exception NotFoundException если пользователь не найден
+     * @exception DisabledException если пользователь выключен
+     * @return Возвращает JwtAuthDto содержающую JWT и Refresh токены
+     * @see #generateJwtToken(User) 
+     * @see #generateRefreshToken(User) */
     public JwtAuthDto generateAuthToken(String username){
 
 
@@ -48,7 +58,14 @@ public class JwtService {
 
 
     }
-
+    
+    /** Метод для обновления текущего токена
+     * @param username Принимает имя пользователя
+     * @param refreshToken Принимает строку с рефреш токеном
+     * @throws NotFoundException если пользователь не найден
+     * @throws DisabledException если пользователь выключен
+     * @return Возвращает JwtAuthDto с данными об обновленном токене
+     * @see #generateJwtToken(User) */
     public JwtAuthDto refreshBaseToken(String username, String refreshToken){
         User user= repository.findByUsername(username)
                 .orElseThrow(()-> new NotFoundException("User not found"));
@@ -63,7 +80,9 @@ public class JwtService {
 
     }
 
-
+    /** Получить имя пользователя из токена 
+     * @param  token  Принимает строку с токеном
+     * @return Возвращает строку с именем пользователя*/
     public String getUsernameFromToken(String token){
         Claims claims= Jwts.parser()
                 .verifyWith(getSignInKey())
@@ -74,6 +93,9 @@ public class JwtService {
         return claims.getSubject();
     }
 
+    /** Получить id пользователя из токена 
+     * @param  token  Принимает строку с токеном
+     * @return Возвращает userId пользователя*/
     public Long getUserIdFromToken(String token){
         Number num= Jwts.parser()
                 .verifyWith(getSignInKey())
@@ -86,7 +108,10 @@ public class JwtService {
 
         return num.longValue();
     }
-
+    
+    /** Получить роль из токена 
+     * @param  token  Принимает строку с токеном
+     * @return Возвращает роль Role*/
     public Role getRoleFromToken(String token){
         Claims claims = Jwts.parser()
                 .verifyWith(getSignInKey())
@@ -100,7 +125,14 @@ public class JwtService {
 
     }
 
-
+    /** Метод реализует проверку токена на корректность
+     * @param token Принимает строку с токеном
+     * @throws ExpiredJwtException если срок действия токена истек
+     * @throws UnsupportedJwtException если токен не поддерживается
+     * @throws MalformedJwtException если токен поврежден
+     * @throws SecurityException если произошла ошибка со стороны Securoty
+     * @throws Exception если токен неправильный
+     * @return Возвращает true или false в зависимости от корректности токена*/
     public boolean validateJwtToken(String token){
         try{
             Jwts.parser()
@@ -129,20 +161,24 @@ public class JwtService {
         return false;
     }
 
-
+    /** Метод отвечающий за генерацию JWT токена
+     * @param user Принимает пользователя User
+     * @return Возвращает строку состоящую из сгенерированного токена*/
     private String generateJwtToken(User user){
         Date date= Date.from(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .subject(user.getUsername())
                 .claim("uid", user.getId())
                 .claim("role", user.getRole().name())
-                .setExpiration(date)
+                .expiration(date)
                 .signWith(getSignInKey())
                 .compact();
 
     }
 
+    /** Метод реализует ключ для входа, дешифруя базовый JWT SECRET KEY
+     * @return Возвращает секретный ключ SecretKey */
     private SecretKey getSignInKey(){
         byte[] keyBytes= Decoders.BASE64.decode(jwtSecret);
 
@@ -150,14 +186,17 @@ public class JwtService {
 
     }
 
+    /** Метод генерирует рефреш токен для обновления текущего токена 
+     * @param user Принимает пользователя User
+     * @return Возвращаеь строку с рефреш токеном*/
     private String generateRefreshToken(User user){
         Date date= Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .subject(user.getUsername())
                 .claim("uid", user.getId())
                 .claim("roles", user.getRole())
-                .setExpiration(date)
+                .expiration(date)
                 .signWith(getSignInKey())
                 .compact();
 

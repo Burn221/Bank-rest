@@ -6,8 +6,11 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/** Класс отвечающий за конфигурацию Swagger/OpenApi */
 @Configuration
 public class OpenApiConfiguration {
+
+    /** Метод, задает настройки отображения информации в swagger */
     @Bean
     public OpenAPI monitorSensorsOpenApi(){
         return new OpenAPI()
