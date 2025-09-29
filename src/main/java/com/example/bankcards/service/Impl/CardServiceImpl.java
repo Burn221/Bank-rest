@@ -138,7 +138,6 @@ public class CardServiceImpl implements CardService {
         CardResponse response= mapper.toResponse(card);
 
         response.setPanMasked(Mask.mask(card.getPanLast4()));
-        response.setPanPlain(AesGcm.decryptFromBase64(card.getPanEncrypted()));
         return response;
 
     }

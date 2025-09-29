@@ -31,6 +31,7 @@ public interface CardRepository extends JpaRepository<Card,Long> {
 
     Optional<Card> findByIdAndUser_Id(Long cardId, Long userId);
 
+
     Page<Card> findByUser_Id(Long userId, Pageable pageable);
 
     boolean existsByUser_Id(Long userId);
@@ -52,6 +53,12 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select c from Card c where c.id = :id")
     Optional<Card> findForUpdate(@Param("id") Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        select c from Card c where c.id=:panEncrypted
+""")
+    Optional<Card> findForUpdateByPan(@Param("panEncrypted") String panEncrypted);
 
 
 }
