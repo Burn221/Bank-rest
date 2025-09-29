@@ -20,6 +20,7 @@ import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/** Класс сервиса для работы с пользователями */
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
     private JwtService jwtService;
 
+    /** Осуществляет авторизацию в систему
+     * @param dto Принимает UserCredentialsDto который содержит поля: username, password
+     * @return Возвращает сгенерированый JWT токен авторизации */
     @Transactional
     @Override
     public JwtAuthDto signIn(UserCredentialsDto dto) throws AuthenticationException{
@@ -38,6 +42,9 @@ public class UserServiceImpl implements UserService {
         return jwtService.generateAuthToken(user.getUsername());
     }
 
+    /** Генерирует refresh token авторизации
+     * @param dto Принимает RefreshTokenDto который содержит в себе рефреш токен
+     * @return Возвращает JwtAuthDto которая содержит в себе Refresh Token*/
     @Transactional
     @Override
     public JwtAuthDto refreshToken(RefreshTokenDto dto) throws AuthenticationException {
@@ -54,6 +61,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /** Метод для создания пользователя
+     * @param dto Принимает CreateUserRequest dto с полями: username, password, role
+     * @return Возвращает строку "User successfully created!"*/
     @Transactional
     @Override
     public String createUser(CreateUserRequest dto) {
@@ -69,6 +79,10 @@ public class UserServiceImpl implements UserService {
         return "User successfully created!";
     }
 
+    /** Удалить пользователями
+     * @param userId Принимает id пользователя
+     * @throws UsernameNotFoundException если username не найден
+     * Ничего не возвращает*/
     @Transactional
     @Override
     public void deleteUser(Long userId) {
@@ -78,12 +92,17 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /** Получить пользователя по его username
+     * @param username Принимает имя пользователя
+     * @throws UsernameNotFoundException если пользователь не найден
+     * @return Возвращает UserResponse с полями: id, username, role, enabled, createdAt */
     @Override
     public UserResponse getUserByUsername(String username) {
         User user= repository.findByUsername(username)
                 .orElseThrow(()->new UsernameNotFoundException("User not found"));
 
         UserResponse response= new UserResponse();
+        response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());
@@ -95,7 +114,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    /** Ищет пользователя по введеным юзернейму и паролю: метод для jwt авторизации
+     * @param dto Принимает UserCredentialsDto dto которое содержит поля: username, password
+     * @return Возвращает объект пользователя*/
     private User findByCredentials(UserCredentialsDto dto) throws AuthenticationException{
         Optional<User> optionalUser= repository.findByUsername(dto.getUsername());
 
@@ -110,6 +131,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /** Выключает пользователя
+     * @param userId Принимает id пользователя
+     * @return Возвращает UserResponse с полями: id, username, role, enabled, createdAt */
     @Transactional
     @Override
     public UserResponse disableUser(Long userId) {
@@ -121,6 +145,7 @@ public class UserServiceImpl implements UserService {
         repository.save(user);
 
         UserResponse response= new UserResponse();
+        response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());
@@ -129,6 +154,10 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+
+    /** Включает пользователя
+     * @param userId Принимает id пользователя
+     * @return Возвращает UserResponse с полями: id, username, role, enabled, createdAt */
     @Transactional
     @Override
     public UserResponse activateUser(Long userId) {
@@ -141,6 +170,7 @@ public class UserServiceImpl implements UserService {
         repository.save(user);
 
         UserResponse response= new UserResponse();
+        response.setId(user.getId());
         response.setUsername(user.getUsername());
         response.setRole(user.getRole());
         response.setEnabled(user.isEnabled());

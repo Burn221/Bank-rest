@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+/** Класс сервиса для работы с картами, который реализует интерфейс CardService */
 @Service
 @AllArgsConstructor
 public class CardServiceImpl implements CardService {
@@ -34,7 +35,22 @@ public class CardServiceImpl implements CardService {
     private CardMapper mapper;
 
 
-
+    /** Создание карты админом
+     * @param dto Приниамает CreateCardRequest dto который содержит поля для создания карты: userId, ownerName, currency
+     * @throws NotFoundException если карта не найдена
+     * @return объект CardResponse со следующими полями:
+     *              <ul>
+     *                  <li>id - идентификатор созданной карты</li>
+     *                  <li>userId - идентификатор владельца</li>
+     *                  <li>panMasked - скрытый маской PAN пользователя</li>
+     *                  <li>expiryMonth - месяц истечения срока работы карты</li>
+     *                  <li>expiryYear - месяц истечения срока работы карты</li>
+     *                  <li>ownerName - имя владельца</li>
+     *                  <li>currency - валюта</li>
+     *                  <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+     *                  <li>balanceMinor - баланс на карте</li>
+     *                  <li>createdAt - дата и время создания</li>
+     *              </ul>*/
     @Override
     @Transactional
     public CardResponse createCardAdmin(CreateCardRequest dto) {
@@ -61,6 +77,23 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+    /** Обновить карту админом
+     * @param cardId Принимает id карты которую нужно обновить
+     * @param dto Принимает UpdateCardRequest dto которая содержит поле: ownerName для обновления
+     * @throws NotFoundException если карта не найдена
+     * @return объект CardResponse со следующими полями:
+     *              <ul>
+     *                  <li>id - идентификатор созданной карты</li>
+     *                  <li>userId - идентификатор владельца</li>
+     *                  <li>panMasked - скрытый маской PAN пользователя</li>
+     *                  <li>expiryMonth - месяц истечения срока работы карты</li>
+     *                  <li>expiryYear - месяц истечения срока работы карты</li>
+     *                  <li>ownerName - имя владельца</li>
+     *                  <li>currency - валюта</li>
+     *                  <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+     *                  <li>balanceMinor - баланс на карте</li>
+     *                  <li>createdAt - дата и время создания</li>
+     *              </ul>*/
 
     @Override
     @Transactional
@@ -77,7 +110,11 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
-
+    /** Удаляет карту админом
+     * @param cardId Принимает id карты для удаления
+     * @throws NotFoundException если карта не найдена
+     * @throws ActivatedException если карта disabled
+     * Ничего не возвращает*/
     @Override
     @Transactional
     public void deleteCardAdmin(Long cardId) {
@@ -89,7 +126,22 @@ public class CardServiceImpl implements CardService {
         cardRepository.deleteById(cardId);
 
     }
-
+    /** Блокирует карту админом
+     * @param cardId Принимает id карты для блокировки
+     * @throws NotFoundException если карта не найдена
+     * @return объект CardResponse со следующими полями:
+           *              <ul>
+           *                  <li>id - идентификатор созданной карты</li>
+           *                  <li>userId - идентификатор владельца</li>
+           *                  <li>panMasked - скрытый маской PAN пользователя</li>
+           *                  <li>expiryMonth - месяц истечения срока работы карты</li>
+           *                  <li>expiryYear - месяц истечения срока работы карты</li>
+           *                  <li>ownerName - имя владельца</li>
+           *                  <li>currency - валюта</li>
+           *                  <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+           *                  <li>balanceMinor - баланс на карте</li>
+           *                  <li>createdAt - дата и время создания</li>
+           *              </ul> */
     @Override
     @Transactional
     public CardResponse blockCardAdmin(Long cardId) {
@@ -104,6 +156,23 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+
+    /** Активирует карту админом
+     * @param cardId Принимает id карты для активирования
+     * @throws NotFoundException если карта не найдена
+     * @return объект CardResponse со следующими полями:
+     *              <ul>
+     *                  <li>id - идентификатор созданной карты</li>
+     *                  <li>userId - идентификатор владельца</li>
+     *                  <li>panMasked - скрытый маской PAN пользователя</li>
+     *                  <li>expiryMonth - месяц истечения срока работы карты</li>
+     *                  <li>expiryYear - месяц истечения срока работы карты</li>
+     *                  <li>ownerName - имя владельца</li>
+     *                  <li>currency - валюта</li>
+     *                  <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+     *                  <li>balanceMinor - баланс на карте</li>
+     *                  <li>createdAt - дата и время создания</li>
+     *              </ul> */
     @Override
     @Transactional
     public CardResponse activateCardAdmin(Long cardId) {
@@ -118,6 +187,25 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+    /** Показать все карты админу с пагинацией а также параметрами
+     * @param pageable Принимает pageable для настройки отображения страниц и фильтрации/сортировки
+     * @param userId Принимает id пользователя если необходим вывод карт определенного пользователя
+     * @param status Принимает status если необходим выврд карт определенного статуса
+     * @param last4 Принимает last4 если необходим вывод карт с совпадающими с этим параметром 4х последних цифр
+     * @return Возвращает страницу Page состоящей из объектов CardResponse, которые состоят из:
+     * <ul>
+     *                        <li>id - идентификатор созданной карты</li>
+     *                        <li>userId - идентификатор владельца</li>
+     *                        <li>panMasked - скрытый маской PAN пользователя</li>
+     *                        <li>expiryMonth - месяц истечения срока работы карты</li>
+     *                        <li>expiryYear - месяц истечения срока работы карты</li>
+     *                        <li>ownerName - имя владельца</li>
+     *                        <li>currency - валюта</li>
+     *                        <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+     *                        <li>balanceMinor - баланс на карте</li>
+     *                        <li>createdAt - дата и время создания</li>
+     *                    </ul>*/
+
 
     @Transactional
     @Override
@@ -131,7 +219,22 @@ public class CardServiceImpl implements CardService {
     }
 
 
-
+    /** Получить карту по id админом
+     * @param cardId Принимает id карты пользователя
+     *  @throws NotFoundException если карта не найдена
+     * @return ВозвращаеCardResponse, которые состоит из:
+      * <ul>
+      *                        <li>id - идентификатор созданной карты</li>
+      *                        <li>userId - идентификатор владельца</li>
+      *                        <li>panMasked - скрытый маской PAN пользователя</li>
+      *                        <li>expiryMonth - месяц истечения срока работы карты</li>
+      *                        <li>expiryYear - месяц истечения срока работы карты</li>
+      *                        <li>ownerName - имя владельца</li>
+      *                        <li>currency - валюта</li>
+      *                        <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+      *                        <li>balanceMinor - баланс на карте</li>
+      *                        <li>createdAt - дата и время создания</li>
+      *                    </ul>*/
     @Override
     public CardResponse getByIdAdmin(Long cardId) {
         Card card=cardRepository.findById(cardId).orElseThrow(()-> new NotFoundException("Card not found"));
@@ -142,6 +245,23 @@ public class CardServiceImpl implements CardService {
 
     }
 
+    /** Создать карту пользователем
+     * @param dto Приниамает CreateCardRequest dto который содержит поля для создания карты: userId, ownerName, currency
+     *  @throws NotFoundException если карта не найдена
+     * @return объект CardResponse со следующими полями:
+     *              <ul>
+     *                  <li>id - идентификатор созданной карты</li>
+     *                  <li>userId - идентификатор владельца</li>
+     *                  <li>panMasked - скрытый маской PAN пользователя</li>
+     *                  <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</>
+     *                  <li>expiryMonth - месяц истечения срока работы карты</li>
+     *                  <li>expiryYear - месяц истечения срока работы карты</li>
+     *                  <li>ownerName - имя владельца</li>
+     *                  <li>currency - валюта</li>
+     *                  <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+     *                  <li>balanceMinor - баланс на карте</li>
+     *                  <li>createdAt - дата и время создания</li>
+     *              </ul>*/
     @Transactional
     @Override
     public CardResponse createCardUser(Long userId, CreateCardRequest dto) {
@@ -168,6 +288,23 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+    /** Показать все карты пользователем с пагинацией
+     * @param pageable Принимает pageable для настройки отображения страниц и фильтрации/сортировки
+     * @param userId Принимает id пользователя если необходим вывод карт определенного пользователя
+     * @return Возвращает страницу Page состоящей из объектов CardResponse, которые состоят из:
+     * <ul>
+     *                        <li>id - идентификатор созданной карты</li>
+     *                        <li>userId - идентификатор владельца</li>
+     *                        <li>panMasked - скрытый маской PAN пользователя</li>
+     *                        <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</>
+     *                        <li>expiryMonth - месяц истечения срока работы карты</li>
+     *                        <li>expiryYear - месяц истечения срока работы карты</li>
+     *                        <li>ownerName - имя владельца</li>
+     *                        <li>currency - валюта</li>
+     *                        <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+     *                        <li>balanceMinor - баланс на карте</li>
+     *                        <li>createdAt - дата и время создания</li>
+     *                    </ul>*/
     @Override
     public Page<CardResponse> showMyCardsUser(Long userId, Pageable pageable) {
         return cardRepository.findByUser_Id(userId,pageable)
@@ -181,6 +318,25 @@ public class CardServiceImpl implements CardService {
 
     }
 
+
+    /** Получить карту по id пользователем
+      * @param cardId Принимает id карты пользователя
+      *  @throws NotFoundException если карта не найдена
+      * @param userId Принимает id пользователя
+      * @return ВозвращаеCardResponse, которые состоит из:
+      * <ul>
+      *                        <li>id - идентификатор созданной карты</li>
+      *                        <li>userId - идентификатор владельца</li>
+      *                        <li>panMasked - скрытый маской PAN пользователя</li>
+      *                        <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</>
+      *                        <li>expiryMonth - месяц истечения срока работы карты</li>
+      *                        <li>expiryYear - месяц истечения срока работы карты</li>
+      *                        <li>ownerName - имя владельца</li>
+      *                        <li>currency - валюта</li>
+      *                        <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+      *                        <li>balanceMinor - баланс на карте</li>
+      *                        <li>createdAt - дата и время создания</li>
+      *                    </ul>*/
     @Override
     public CardResponse getMyCardUser(Long cardId, Long userId) {
         Card card= cardRepository.findByIdAndUser_Id(cardId, userId)
@@ -193,6 +349,11 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+    /** Показать баланс пользователю
+     * @param userId Принимает id пользователя
+     * @param cardId Принимает id карты
+     * @throws NotFoundException Если карта не найдена
+     * @return Возвращает BalanceResponse с полями: balance, currency*/
     @Override
     public BalanceResponse showMyBalanceUser(Long userId, Long cardId) {
 
@@ -200,6 +361,23 @@ public class CardServiceImpl implements CardService {
                 .orElseThrow(()-> new NotFoundException("Card not found"));
     }
 
+    /** Блокировка карты пользователем
+     * @param userId Принимает id пользователя
+     * @param cardId Принимает id карты
+     * @throws NotFoundException если карта не найдена
+     *    @return объект CardResponse со следующими полями:
+      *              <ul>
+      *                  <li>id - идентификатор созданной карты</li>
+      *                  <li>userId - идентификатор владельца</li>
+      *                  <li>panMasked - скрытый маской PAN пользователя</li>
+      *                  <li>expiryMonth - месяц истечения срока работы карты</li>
+      *                  <li>expiryYear - месяц истечения срока работы карты</li>
+      *                  <li>ownerName - имя владельца</li>
+      *                  <li>currency - валюта</li>
+      *                  <li>status - текущий статус (ACTIVE, BLOCKED, EXPIRED)</li>
+      *                  <li>balanceMinor - баланс на карте</li>
+      *                  <li>createdAt - дата и время создания</li>
+      *              </ul>*/
     @Override
     @Transactional
     public CardResponse blockRequestUser(Long userId, Long cardId) {

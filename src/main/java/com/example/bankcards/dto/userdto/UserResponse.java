@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class UserResponse {
+    @NotNull Long id;
     @NotNull String username;
     @NotNull Role role;
     @NotNull boolean enabled;

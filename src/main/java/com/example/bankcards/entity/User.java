@@ -9,6 +9,11 @@ import org.hibernate.proxy.HibernateProxy;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Класс описывающий пользователей банка
+
+*/
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -18,27 +23,39 @@ import java.util.Objects;
 @Valid
 public class User {
 
+    /** id первичный ключ */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Имя пользователя */
     @Column(name = "username",unique = true, nullable = false, length = 100)
     private String username;
 
+    /** Хэш представление пароля */
     @Column(name="password_hash", nullable = false)
     private String password_hash;
 
+
+    /** Роль пользователя */
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 
+    /** Активен ли пользователь */
     @Column(name = "enabled", nullable = false)
     private boolean enabled=true;
 
+    /** Дата создания пользователя */
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    //Сравнение объектов идет по id
+
+    /**
+     * Переопределяет equals для сущности, сравнивает два объекта по id
+     * @param o Принимает объект для сравнения
+     * @return возвращает true если id объектов совпадает и false если нет
+      */
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -50,6 +67,10 @@ public class User {
         return getId() != null && Objects.equals(getId(), user.getId());
     }
 
+    /**
+     * Переопределяет hashCode() для корректного сравнения
+     * @return возвращает корректный хэшкод
+     */
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();

@@ -18,14 +18,33 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+
+/** Класс сервиса для работы с переводами */
 @Service
 @AllArgsConstructor
+
+
 public class TransferServiceImpl implements TransferService {
 
     private TransferRepository transferRepository;
     private CardRepository cardRepository;
     private TransferMapper mapper;
 
+    /** Метод осуществляющий перевод между картами пользователями
+     * @param userId Принимает id пользователя
+     * @param dto Принимает CreateTransferRequest dto который содержит поля: fromCard, toCard, amountMinor, currency
+     * @throws ForbiddenTransactionException Если транзакция не соответсвует условиям или запрещена
+     * @throws NotFoundException Если карта не найден
+     * @return Возвращает TransferResponse с полями:
+     *                     <ul>
+     *                        <li>id - идентификатор созданного перевода</li>
+     *                        <li>fromCardId - id карты с которой производится перевод</li>
+     *                        <li>toCardId - id карты на которую переводят</li>
+     *                        <li>amountMinor - Сумма перевода</li>
+     *                        <li>currency - Валюта перевода</li>
+     *                        <li>transferStatus - Статус перевода: SUCCESS/FAILED/PENDING</li>
+     *                         <li>createdAt - дата и время создания</li>
+     *                   </ul>*/
     @Override @Transactional
     public TransferResponse executeTransfer(Long userId, CreateTransferRequest dto) {
         if(dto.fromCard().equals(dto.toCard())) throw new ForbiddenTransactionException("Transfer to the same card are forbidden");
