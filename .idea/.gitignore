@@ -9,8 +9,8 @@
 /dataSources/
 /dataSources.local.xml
 
-/.env
+.env
 
-.idea/
+/.idea/
 
-**/target/
+target/
