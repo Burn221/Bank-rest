@@ -131,7 +131,7 @@ public class JwtService {
      * @throws UnsupportedJwtException если токен не поддерживается
      * @throws MalformedJwtException если токен поврежден
      * @throws SecurityException если произошла ошибка со стороны Securoty
-     * @throws Exception если токен неправильный
+     
      * @return Возвращает true или false в зависимости от корректности токена*/
     public boolean validateJwtToken(String token){
         try{

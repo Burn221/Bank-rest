@@ -23,7 +23,7 @@ public final class AesGcm {
     private static volatile SecretKeySpec KEY;
     private static final SecureRandom RAND = new SecureRandom();
 
-    /** Инициализация секретного ключа */
+    /** Секретный ключ */
     private static SecretKeySpec key() {
         SecretKeySpec k = KEY;
         if (k != null) return k;
@@ -42,7 +42,9 @@ public final class AesGcm {
         }
     }
 
-    /** Метод отвечающий за шифрацию PAN */
+    /** Метод отвечающий за шифрацию PAN
+     * @param plaintext Принимает текст в исходнои виде
+     * @return Возвращает строку зашифрованую*/
     public static String encryptToBase64(String plaintext) {
         try {
             byte[] iv = new byte[IV_LEN];
@@ -59,7 +61,9 @@ public final class AesGcm {
     }
 
 
-    /** Метод отвечающий за дешифрацию PAN */
+    /** Метод отвечающий за дешифрацию PAN
+     * @param blobB64 Принимает уже загфированую base64 строку
+     * @return Возвращает расшифрованую строку*/
     public static String decryptFromBase64(String blobB64) {
         try {
             byte[] all = Base64.getDecoder().decode(blobB64);

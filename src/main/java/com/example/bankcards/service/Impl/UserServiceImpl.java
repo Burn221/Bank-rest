@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /** Ищет пользователя по введеным юзернейму и паролю: метод для jwt авторизации
+    /** Поиск пользователя по введеным юзернейму и паролю: метод для jwt авторизации
      * @param dto Принимает UserCredentialsDto dto которое содержит поля: username, password
      * @return Возвращает объект пользователя
      * @see UserRepository#findByUsername(String)*/

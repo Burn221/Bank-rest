@@ -38,7 +38,7 @@ public class Card {
     @Column(name = "pan_last4", nullable = false, length = 4)
     private String panLast4;
 
-    /** Имя владельца карты*/
+
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
 

@@ -21,7 +21,7 @@ public interface CardRepository extends JpaRepository<Card,Long> {
      * @param status Принимает status если необходимо получить карты с определенным статсуом
      * @param last4 Принимает 4 последние цифры карты если необходимо поулчить карты с определенными 4мя последними цифрами
      * @param pageable Принимает pageable для тонкой настройки отображения страницы
-     * @return Возвращает страницу Page<Card> карт*/
+     * @return Возвращает страницу Page карт*/
     @Query("""
     select c from Card c
     where (:userId is null or c.user.id=:userId)
@@ -45,7 +45,7 @@ public interface CardRepository extends JpaRepository<Card,Long> {
     /** Поиск по id пользователя
      * @param userId принимает id пользователя
      * @param pageable Принимает pageable для тонкой настройки отображения страницы
-     * @return Возвращает страницу Page<Card> карт*/
+     * @return Возвращает страницу Page карт*/
     Page<Card> findByUser_Id(Long userId, Pageable pageable);
 
     /** Проверка существует ли пользователь с данным id

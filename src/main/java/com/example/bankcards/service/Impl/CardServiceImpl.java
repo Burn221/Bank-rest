@@ -253,7 +253,7 @@ public class CardServiceImpl implements CardService {
      *                  <li>id - идентификатор созданной карты</li>
      *                  <li>userId - идентификатор владельца</li>
      *                  <li>panMasked - скрытый маской PAN пользователя</li>
-     *                  <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</>
+     *                  <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</li>
      *                  <li>expiryMonth - месяц истечения срока работы карты</li>
      *                  <li>expiryYear - месяц истечения срока работы карты</li>
      *                  <li>ownerName - имя владельца</li>
@@ -296,7 +296,7 @@ public class CardServiceImpl implements CardService {
      *                        <li>id - идентификатор созданной карты</li>
      *                        <li>userId - идентификатор владельца</li>
      *                        <li>panMasked - скрытый маской PAN пользователя</li>
-     *                        <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</>
+     *                        <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</li>
      *                        <li>expiryMonth - месяц истечения срока работы карты</li>
      *                        <li>expiryYear - месяц истечения срока работы карты</li>
      *                        <li>ownerName - имя владельца</li>
@@ -328,7 +328,7 @@ public class CardServiceImpl implements CardService {
       *                        <li>id - идентификатор созданной карты</li>
       *                        <li>userId - идентификатор владельца</li>
       *                        <li>panMasked - скрытый маской PAN пользователя</li>
-      *                        <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</>
+      *                        <li>panPLain - полный PAN пользователя (ВОЗВРАЩАЕТСЯ ТОЛЬКО ПОЛЬЗОВАТЕЛЮ)</li>
       *                        <li>expiryMonth - месяц истечения срока работы карты</li>
       *                        <li>expiryYear - месяц истечения срока работы карты</li>
       *                        <li>ownerName - имя владельца</li>
