@@ -8,19 +8,22 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-
+/** Класс отвечающий за шифрацию PAN кода карты */
 public final class AesGcm {
     private AesGcm() {}
 
+    /** Тип шифрации */
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final int IV_LEN = 12;
     private static final int TAG_LEN_BITS = 128;
 
+    /** Стандартный ключ если в переменной окружения не задан иной */
     private static final String DEFAULT_DEV_KEY_B64 = "bWFrZS1tZS1yZXBsYWNlLXRoaXMtMzItYnl0ZS1rZXk=";
 
     private static volatile SecretKeySpec KEY;
     private static final SecureRandom RAND = new SecureRandom();
 
+    /** Инициализация секретного ключа */
     private static SecretKeySpec key() {
         SecretKeySpec k = KEY;
         if (k != null) return k;
@@ -39,7 +42,7 @@ public final class AesGcm {
         }
     }
 
-
+    /** Метод отвечающий за шифрацию PAN */
     public static String encryptToBase64(String plaintext) {
         try {
             byte[] iv = new byte[IV_LEN];
@@ -56,6 +59,7 @@ public final class AesGcm {
     }
 
 
+    /** Метод отвечающий за дешифрацию PAN */
     public static String decryptFromBase64(String blobB64) {
         try {
             byte[] all = Base64.getDecoder().decode(blobB64);

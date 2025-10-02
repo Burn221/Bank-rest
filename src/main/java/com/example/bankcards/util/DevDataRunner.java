@@ -16,7 +16,7 @@ import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;
 
-
+/** Класс добавляюий тестовые данные с правильно зашифроваными паролями и PAN, только для DEV */
 @Component
 @Profile("dev")
 @AllArgsConstructor

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
+/** Класс контроллера отвечающий за переводы между карт */
 @AllArgsConstructor
 @RestController
 @Validated
@@ -27,7 +28,7 @@ import java.net.URI;
 public class UserTransfersController {
     private TransferServiceImpl transferService;
 
-
+    /** Метод контроллера реализующий создание нового трансфера из json тела */
     @Operation(summary = "Execute transfer between current user cards", description = "Transfer must be between cards of the same user")
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_USER')")

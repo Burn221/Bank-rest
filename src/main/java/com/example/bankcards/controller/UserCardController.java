@@ -31,6 +31,13 @@ public class UserCardController {
     private CardServiceImpl cardService;
 
 
+    /** Метод контроллера реализующий создание карты пользователем
+     * @param me Принимает Dto AuthUser содержащее данные о пользователе из JWT токена, его id, username, role и т.д
+     * @param request Принимает Json тело запроса на создание карты CreateCardRequest
+     * @return Возвращает ResponseEntity с телом CardResponse и кодом 201
+     * @see CreateCardRequest
+     * @see AuthUser
+     * @see CardResponse*/
     @Operation(summary = "Create card by user")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping
@@ -42,7 +49,12 @@ public class UserCardController {
         return ResponseEntity.created(URI.create("/api/me/cards/"+response.getId())).body(response);
     }
 
-
+    /** Метод возвращающий все карты конкретного пользователя
+     * @param me Принимает Dto AuthUser содержащее данные о пользователе из JWT токена, его id, username, role и т.д
+     * @param pageable Принимает настройки вывода страниц
+     * @return Возвращает список полученых карт пользователя и код 200
+     * @see AuthUser
+     * @see CardResponse*/
     @Operation(summary = "Get all current user cards")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping
@@ -53,7 +65,12 @@ public class UserCardController {
         return ResponseEntity.ok(cardService.showMyCardsUser(me.id(), pageable));
     }
 
-
+    /** Метод возвращает карту текущего пользователя по id карты
+     * @param me Принимает Dto AuthUser содержащее данные о пользователе из JWT токена, его id, username, role и т.д
+     * @param cardId Принимает id карты
+     * @return Возвращает ResponseEntity с телом CardResponse
+     * @see AuthUser
+     * @see CardResponse*/
     @Operation(summary = "Get current user card by id")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/{cardId}")
@@ -64,7 +81,13 @@ public class UserCardController {
         return ResponseEntity.ok(cardService.getMyCardUser(cardId, me.id()));
     }
 
-
+    /** Метод получающий баланс текущего пользователя
+     * @param me Принимает Dto AuthUser содержащее данные о пользователе из JWT токена, его id, username, role и т.д
+     * @param cardId Принимает id карты с которой нужно получить баланс
+     * @return Возвращает ResponseEntity с телом BalanceResponse
+     * @see AuthUser
+     * @see BalanceResponse
+     */
     @Operation(summary = "Get balance of current user card")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/balance/{cardId}")
@@ -75,6 +98,12 @@ public class UserCardController {
     }
 
 
+    /** Метод запрашивает блокировку карты текущего пользователя
+     * @param me Принимает Dto AuthUser содержащее данные о пользователе из JWT токена, его id, username, role и т.д
+     * @param cardId Принимает id карты которую нужно заблокировать
+     * @return Возвращает ResponseEntity с телом CardResponse карты
+     * @see AuthUser
+     * @see CardResponse*/
     @Operation(summary = "Block current user card")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PatchMapping("/block/{cardId}")

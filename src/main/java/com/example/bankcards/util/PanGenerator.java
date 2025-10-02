@@ -1,5 +1,6 @@
 package com.example.bankcards.util;
 
+/** Класс генерирующий случайный PAN код для каждой новой карты */
 public class PanGenerator {
 
      public static String generatePan(){
