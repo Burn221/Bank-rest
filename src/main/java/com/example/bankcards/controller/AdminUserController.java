@@ -1,7 +1,11 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.dto.CardDTO.CardResponse;
+import com.example.bankcards.dto.CardDTO.CreateCardRequest;
+import com.example.bankcards.dto.userdto.AuthUser;
 import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.dto.userdto.UserResponse;
+import com.example.bankcards.service.Impl.CardServiceImpl;
 import com.example.bankcards.service.Impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +25,13 @@ public class AdminUserController {
 
     private UserServiceImpl userService;
 
+
+    /** Метод контроллера реализующий создание пользователя админом
+     * @param request Принимает Json тело запроса на создание карты CreateUserRequest
+     * @return Возвращает строку об успешном создании пользователя
+     * @see CreateUserRequest
+
+     * @see UserServiceImpl#createUser(CreateUserRequest) */
     @Operation(summary = "Create user")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/create")
@@ -30,6 +41,12 @@ public class AdminUserController {
 
     }
 
+    /** Метод контроллера реализующий удаление пользователя админом
+     * @param userId Принимает id пользователя которого необходимо удалить
+     * @return Возвращает пустой ResponseEntity
+     * @see UserServiceImpl#deleteUser(Long)
+
+     */
     @Operation(summary = "Delete user", description = "User must be disabled before deleting")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/delete/{userId}")
@@ -39,6 +56,11 @@ public class AdminUserController {
         return ResponseEntity.noContent().build();
     }
 
+    /** Метод контроллера который выключает пользователя
+     * @param userId Принимает id пользователя которого нужно выключить
+     * @return Возвращает ResponseEntity с телом UserResponse карты
+     * @see UserServiceImpl#activateUser(Long)
+     * @see UserResponse*/
     @Operation(summary = "Disable user")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PatchMapping("/disable/{userId}")
@@ -48,6 +70,11 @@ public class AdminUserController {
     }
 
 
+    /** Метод контроллера который активирует пользователя
+     * @param userId Принимает id пользователя которого нужно активировать
+     * @return Возвращает ResponseEntity с телом UserResponse карты
+     * @see UserServiceImpl#activateUser(Long) 
+     * @see UserResponse*/
     @Operation(summary = "Activate user")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PatchMapping("/activate/{userId}")
@@ -56,7 +83,12 @@ public class AdminUserController {
         return ResponseEntity.ok(userService.activateUser(userId));
     }
 
-
+    /** Метод возвращает пользователя по юзернейму
+     * @param username Принимает имя пользователя
+     * @return Возвращает ResponseEntity с телом CardResponse
+     * @see UserServiceImpl#getUserByUsername(String) 
+     
+     * @see UserResponse*/
     @Operation(summary = "Find user by username")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/{username}")
