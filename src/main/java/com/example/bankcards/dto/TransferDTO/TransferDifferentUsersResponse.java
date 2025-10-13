@@ -1,16 +1,18 @@
 package com.example.bankcards.dto.TransferDTO;
 
-//todo
-public record TransferDifferentUsersResponse(
-        Long id,
-        Long fromCardId,
-        String fromOwnerName,
-        String fromPanMasked,
-        Long amount,
-        Long toCardId,
-        String toOwnerName,
-        String toPanMasked
+import lombok.Data;
+
+@Data
+public class TransferDifferentUsersResponse {
+    Long fromCardId;
+    Long toCardId;
+    String fromOwnerName;
+    String toOwnerName;
+    String fromPanMasked;
+    String toPanMasked;
+    Long amount;
 
 
-) {
+
+
 }

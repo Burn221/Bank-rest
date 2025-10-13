@@ -78,11 +78,16 @@ public interface CardRepository extends JpaRepository<Card,Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
-        select c from Card c where c.id=:panEncrypted
+        select c from Card c where c.panEncrypted=:panEncrypted
 """)
 
-
     Optional<Card> findForUpdateByPan(@Param("panEncrypted") String panEncrypted);
+
+
+    @Query("""
+        select c.id from Card c where c.panEncrypted= :panEncrypted
+""")
+    Long getIdByPan(@Param("panEncrypted") String panEncrypted);
 
 
 }
