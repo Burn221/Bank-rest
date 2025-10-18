@@ -16,7 +16,7 @@ public interface UserService {
 
     JwtAuthDto refreshToken(RefreshTokenDto dto) throws AuthenticationException;
 
-    String createUser(CreateUserRequest dto);
+    JwtAuthDto registerUser(CreateUserRequest dto);
 
     void deleteUser(Long userId);
 

@@ -15,6 +15,7 @@ import com.example.bankcards.repository.CardRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.service.CardService;
 import com.example.bankcards.util.AesGcm;
+import com.example.bankcards.util.Hmac;
 import com.example.bankcards.util.Mask;
 import com.example.bankcards.util.PanGenerator;
 import lombok.AllArgsConstructor;
@@ -60,10 +61,13 @@ public class CardServiceImpl implements CardService {
 
         String generatedPan= PanGenerator.generatePan();
 
+        byte[] panHash= Hmac.hmacSha256(generatedPan, Hmac.hmacKey());
+
         Card card= mapper.toEntity(dto, user);
         card.setUser(user);
         card.setPanEncrypted(AesGcm.encryptToBase64(generatedPan));
         card.setPanLast4(generatedPan.substring(generatedPan.length() - 4));
+        card.setPanHash(panHash);
 
         card.setExpiryMonth((short) LocalDateTime.now().getMonthValue());
         card.setExpiryYear( (short) (LocalDateTime.now().getYear()+ 3) );
@@ -268,13 +272,18 @@ public class CardServiceImpl implements CardService {
         User user= userRepository.findById(userId)
                 .orElseThrow(()-> new NotFoundException("User not found"));
 
+        if(!dto.ownerName().equals(user.getUsername())) throw new ForbiddenTransactionException("Owner name mismatch");
+
         String generatedPan= PanGenerator.generatePan();
+
+        byte[] panHash= Hmac.hmacSha256(generatedPan, Hmac.hmacKey());
 
         Card card= mapper.toEntity(dto,user);
 
         card.setUser(user);
         card.setPanEncrypted(AesGcm.encryptToBase64(generatedPan));
         card.setPanLast4(generatedPan.substring(generatedPan.length() - 4));
+        card.setPanHash(panHash);
         card.setExpiryMonth((short) LocalDateTime.now().getMonthValue());
         card.setExpiryYear( (short) (LocalDateTime.now().getYear()+ 3) );
         card.setStatus(Status.ACTIVE);

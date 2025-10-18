@@ -15,6 +15,7 @@ import com.example.bankcards.repository.TransferRepository;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.service.TransferService;
 import com.example.bankcards.util.AesGcm;
+import com.example.bankcards.util.Hmac;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -109,19 +110,26 @@ public class TransferServiceImpl implements TransferService {
 
     }
 
-    
+    /** Метод перевода на карту другого пользователя с комиссией
+     * @param userId Приниамает id пользоваетля
+     * @param request Принимает запрос на создание перевода другому пользователю
+     * @return Возвращает ответ об удачном переводе
+     * @see TransferDifferentUsersResponse
+     * @see CreateTransferDifferentUserRequest
+     * @see Hmac*/
     @Override
     @Transactional
     public TransferDifferentUsersResponse executeTransferToDifferentUser(Long userId, CreateTransferDifferentUserRequest request) {
 
 
         try {
-            String panEncrypted = AesGcm.encryptToBase64(request.getToPan());
-            Card toCard = cardRepository.findForUpdateByPan(panEncrypted)
-                    .orElseThrow(() -> new NotFoundException("Card not found"));
+            byte[] panHash = Hmac.hmacSha256(request.getToPan(),Hmac.hmacKey());
+            Long toCardId= cardRepository.getCardIdByPanHash(panHash);
+            Card toCard = cardRepository.findForUpdate(toCardId)
+                    .orElseThrow(() -> new NotFoundException("To Card not found"));
 
             Card fromCard = cardRepository.findForUpdate(request.getFromCardId())
-                    .orElseThrow(() -> new NotFoundException("Card not found"));
+                    .orElseThrow(() -> new NotFoundException("From Card not found"));
 
 
             if (fromCard.getUser().getId().equals(toCard.getUser().getId()))
@@ -170,7 +178,8 @@ public class TransferServiceImpl implements TransferService {
         } catch ( FailedTransactionException  | CannotAcquireLockException
                  | OptimisticLockingFailureException | QueryTimeoutException
                  | RecoverableDataAccessException e) {
-            Long toId= cardRepository.getIdByPan(AesGcm.encryptToBase64(request.getToPan()));
+            byte[] panHash= Hmac.hmacSha256(request.getToPan(),Hmac.hmacKey());
+            Long toId= cardRepository.getCardIdByPanHash(panHash);
             transferStatusService.markFailed(request.getFromCardId(), toId, request.getAmount(), request.getCurrency());
             throw e;
 

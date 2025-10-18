@@ -1,18 +1,17 @@
 package com.example.bankcards.exception;
 
-import com.example.bankcards.exception.exceptions.ActivatedException;
-import com.example.bankcards.exception.exceptions.DisabledException;
-import com.example.bankcards.exception.exceptions.ForbiddenTransactionException;
-import com.example.bankcards.exception.exceptions.NotFoundException;
+import com.example.bankcards.exception.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.tomcat.websocket.AuthenticationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -26,6 +25,14 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception, HttpServletRequest request){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.UNAUTHORIZED.value(), LocalDateTime.now())
+        );
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception exception, HttpServletRequest request){
@@ -34,21 +41,33 @@ public class GlobalExceptionHandler {
         );
     }
 
+
+
     @ExceptionHandler(DisabledException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<ErrorResponse> handleDisabledException(DisabledException exception, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.FORBIDDEN.value(), LocalDateTime.now())
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now())
         );
     }
 
     @ExceptionHandler(ActivatedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<ErrorResponse> handleActivatedException(ActivatedException exception, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.FORBIDDEN.value(), LocalDateTime.now())
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now())
         );
     }
+
+
+    @ExceptionHandler(FailedTransactionException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseEntity<ErrorResponse> handleFailedTransactionException(FailedTransactionException exception, HttpServletRequest request){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now())
+        );
+    }
+
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -67,10 +86,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenTransactionException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<ErrorResponse> handleForbiddenTransactionException(ForbiddenTransactionException exception, HttpServletRequest request){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.FORBIDDEN.value(), LocalDateTime.now())
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ErrorResponse(exception.getMessage(), request.getRequestURI(), HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now())
         );
     }
 

@@ -3,11 +3,13 @@ package com.example.bankcards.controller;
 import com.example.bankcards.dto.JwtDTO.JwtAuthDto;
 import com.example.bankcards.dto.JwtDTO.RefreshTokenDto;
 import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
+import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.service.Impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +45,17 @@ public class AuthController {
             throw new AuthenticationException("Authentication failed "+ e.getMessage());
 
         }
+
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<JwtAuthDto> register(@RequestBody CreateUserRequest request)  {
+
+
+            JwtAuthDto jwtAuthDto= userService.registerUser(request);
+            return ResponseEntity.ok(jwtAuthDto);
+
+
 
     }
 

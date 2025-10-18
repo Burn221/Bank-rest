@@ -16,7 +16,7 @@ import org.springframework.boot.CommandLineRunner;
 
 import java.time.LocalDateTime;
 
-/** Класс добавляюий тестовые данные с правильно зашифроваными паролями и PAN, только для DEV */
+/** Класс добавляющий тестовые данные с правильно зашифроваными паролями и PAN, только для DEV */
 @Component
 @Profile("dev")
 @AllArgsConstructor
@@ -42,23 +42,35 @@ public class DevDataRunner implements CommandLineRunner{
             return userRepository.save(u);
         });
 
-        var user = userRepository.findByUsername("user").orElseGet(() -> {
+        var user = userRepository.findByUsername("Nikita").orElseGet(() -> {
             var u2 = new User();
-            u2.setUsername("user");
-            u2.setPassword_hash(passwordEncoder.encode("user"));
+            u2.setUsername("Nikita");
+            u2.setPassword_hash(passwordEncoder.encode("Nikita"));
             u2.setRole(Role.USER);
             u2.setEnabled(true);
             u2.setCreatedAt(LocalDateTime.now());
             return userRepository.save(u2);
         });
 
+        var user2 = userRepository.findByUsername("Oleg").orElseGet(() -> {
+            var u3 = new User();
+            u3.setUsername("Oleg");
+            u3.setPassword_hash(passwordEncoder.encode("Oleg"));
+            u3.setRole(Role.USER);
+            u3.setEnabled(true);
+            u3.setCreatedAt(LocalDateTime.now());
+            return userRepository.save(u3);
+        });
+
         if (!cardRepository.existsByUser_Id(user.getId())) {
 
             var req1 = new CreateCardRequest(user.getId(), "Nikita", "KZT");
             var req2 = new CreateCardRequest(user.getId(), "Nikita", "KZT");
+            var req3= new CreateCardRequest(user2.getId(), "Oleg", "KZT");
 
             var c1 = cardService.createCardUser(user.getId(), req1);
             var c2 = cardService.createCardUser(user.getId(), req2);
+            var c3= cardService.createCardUser(user2.getId(),req3);
 
 
             cardRepository.findForUpdate(c1.getId()).ifPresent(card -> {

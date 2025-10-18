@@ -2,6 +2,7 @@ package com.example.bankcards.controller;
 
 import com.example.bankcards.dto.CardDTO.CardResponse;
 import com.example.bankcards.dto.CardDTO.CreateCardRequest;
+import com.example.bankcards.dto.JwtDTO.JwtAuthDto;
 import com.example.bankcards.dto.userdto.AuthUser;
 import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.dto.userdto.UserResponse;
@@ -31,13 +32,15 @@ public class AdminUserController {
      * @return Возвращает строку об успешном создании пользователя
      * @see CreateUserRequest
 
-     * @see UserServiceImpl#createUser(CreateUserRequest) */
+     * @see UserServiceImpl#registerUser(CreateUserRequest) */
     @Operation(summary = "Create user")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/create")
-    public String createUser(@Valid @RequestBody CreateUserRequest request){
+    public JwtAuthDto createUser(@Valid @RequestBody CreateUserRequest request){
 
-        return userService.createUser(request);
+        return userService.registerUser(request);
+
+
 
     }
 

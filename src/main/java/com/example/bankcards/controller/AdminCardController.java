@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +37,11 @@ public class AdminCardController {
      * @return Возвращает ResponseEntity с телом CardResponse и кодом 201
      * @see CreateCardRequest
      * @see CardResponse
-     * @see CardServiceImpl#createCardAdmin(CreateCardRequest) */
+     * @see CardServiceImpl#createCardAdmin(Long userId,CreateCardRequest) */
     @Operation(summary = "Create card")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<CardResponse> createCard(@RequestBody @Valid CreateCardRequest request){
+    public ResponseEntity<CardResponse> createCard(@AuthenticationPrincipal AuthUser me, @RequestBody @Valid CreateCardRequest request){
         CardResponse response= cardService.createCardAdmin(request);
 
         return ResponseEntity.created(URI.create("/api/cards/"+response.getId()))

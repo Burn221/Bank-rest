@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+      http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="015-add-pan-hash-column" author="nikita">
+        <addColumn tableName="cards">
+            <column name="pan_hash" type="BYTEA"/>
+        </addColumn>
+        <createIndex tableName="cards" indexName="idx_cards_pan_hash">
+            <column name="pan_hash"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="016-drop-unique-pan-encrypted" author="nikita">
+        <dropUniqueConstraint tableName="cards" constraintName="uk_cards_pan_encrypted"/>
+    </changeSet>
+
+    <changeSet id="017-enforce-pan-hash-notnull-unique" author="nikita" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM cards WHERE pan_hash IS NULL
+            </sqlCheck>
+        </preConditions>
+
+        <addNotNullConstraint tableName="cards" columnName="pan_hash" columnDataType="BYTEA"/>
+
+        <addUniqueConstraint tableName="cards" columnNames="pan_hash" constraintName="uk_cards_pan_hash"/>
+    </changeSet>
+
+</databaseChangeLog>

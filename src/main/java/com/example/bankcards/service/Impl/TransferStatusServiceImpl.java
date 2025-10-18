@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+/** Класс сервиса отвеачющий за пометку перевода как FAILED в случае неудачного перевода */
 @Service
 @AllArgsConstructor
 public class TransferStatusServiceImpl implements TransferStatusService {
@@ -22,8 +23,8 @@ public class TransferStatusServiceImpl implements TransferStatusService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void markFailed(Long fromId, Long toId, long amountMinor, String currency) {
         Transfer t = new Transfer();
-        t.setFromCard(cardRepository.getReferenceById(fromId));
-        t.setToCard(cardRepository.getReferenceById(toId));
+        if (fromId != null) t.setFromCard(cardRepository.getReferenceById(fromId));
+        if (toId   != null) t.setToCard(cardRepository.getReferenceById(toId));
         t.setAmountMinor(amountMinor);
         t.setCurrency(currency);
         t.setTransferStatus(TransferStatus.FAILED);

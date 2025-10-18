@@ -17,7 +17,7 @@
         <insert tableName="users">
             <column name="id"           valueNumeric="1"/>
             <column name="username"     value="admin"/>
-            <column name="password"     value="$2a$12$tFoIbP08Afp.kGzussOIWekC0mpBbNndCEdptqxxxz7YUXFbPR2qK"/>
+            <column name="password_hash"     value="$2a$12$tFoIbP08Afp.kGzussOIWekC0mpBbNndCEdptqxxxz7YUXFbPR2qK"/>
             <column name="role"         value="ADMIN"/>
             <column name="enabled"      valueBoolean="true"/>
             <column name="created_at"   valueComputed="NOW()"/>

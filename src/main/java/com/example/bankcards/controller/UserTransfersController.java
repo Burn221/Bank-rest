@@ -1,6 +1,8 @@
 package com.example.bankcards.controller;
 
+import com.example.bankcards.dto.TransferDTO.CreateTransferDifferentUserRequest;
 import com.example.bankcards.dto.TransferDTO.CreateTransferRequest;
+import com.example.bankcards.dto.TransferDTO.TransferDifferentUsersResponse;
 import com.example.bankcards.dto.TransferDTO.TransferResponse;
 import com.example.bankcards.dto.userdto.AuthUser;
 import com.example.bankcards.service.Impl.TransferServiceImpl;
@@ -8,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +33,7 @@ public class UserTransfersController {
 
     /** Метод контроллера реализующий создание нового трансфера из json тела */
     @Operation(summary = "Execute transfer between current user cards", description = "Transfer must be between cards of the same user")
-    @PostMapping
+    @PostMapping("/my")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<TransferResponse> executeTransfer(@AuthenticationPrincipal AuthUser me,
                                                             @RequestBody @Valid CreateTransferRequest request){
@@ -38,7 +41,19 @@ public class UserTransfersController {
 
         TransferResponse response= transferService.executeTransfer(me.id(), request);
 
-        return ResponseEntity.created(URI.create("/api/me/transfers/"+response.id())).body(response);
+        return ResponseEntity.created(URI.create("/api/me/transfers/my/"+response.id())).body(response);
+
+    }
+
+    @PostMapping("/different")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public ResponseEntity<TransferDifferentUsersResponse> executeTransferToDifferentUser(@AuthenticationPrincipal AuthUser me,
+                                                                                         @RequestBody @Valid CreateTransferDifferentUserRequest request){
+
+        TransferDifferentUsersResponse response= transferService.executeTransferToDifferentUser(me.id(),request);
+
+        return ResponseEntity.ok().body(response);
+
 
     }
 

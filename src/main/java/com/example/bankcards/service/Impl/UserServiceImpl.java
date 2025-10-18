@@ -6,11 +6,15 @@ import com.example.bankcards.dto.JwtDTO.UserCredentialsDto;
 import com.example.bankcards.dto.userdto.CreateUserRequest;
 import com.example.bankcards.dto.userdto.UserResponse;
 import com.example.bankcards.entity.User;
+import com.example.bankcards.entity.enums.Role;
 import com.example.bankcards.exception.exceptions.ActivatedException;
 import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +35,8 @@ public class UserServiceImpl implements UserService {
 
     private JwtService jwtService;
 
+    private AuthenticationManager authenticationManager;
+
     /** Осуществляет авторизацию в систему
      * @param dto Принимает UserCredentialsDto который содержит поля: username, password
      * @return Возвращает сгенерированый JWT токен авторизации
@@ -40,6 +46,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtAuthDto signIn(UserCredentialsDto dto) throws AuthenticationException{
         User user= findByCredentials(dto);
+
+
 
         return jwtService.generateAuthToken(user.getUsername());
     }
@@ -65,22 +73,23 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    /** Метод для создания пользователя
-     * @param dto Принимает CreateUserRequest dto с полями: username, password, role
-     * @return Возвращает строку "User successfully created!"*/
+
     @Transactional
     @Override
-    public String createUser(CreateUserRequest dto) {
+    public JwtAuthDto registerUser(CreateUserRequest dto)  {
+
+        if(!dto.password().equals(dto.confirmPassword())) throw new BadCredentialsException("Passwords mismatch");
+
         User user= new User();
         user.setUsername(dto.username());
         user.setPassword_hash(passwordEncoder.encode(dto.password()));
-        user.setRole(dto.role());
+        user.setRole(Role.USER);
         user.setEnabled(true);
         user.setCreatedAt(LocalDateTime.now());
 
         repository.save(user);
 
-        return "User successfully created!";
+        return jwtService.generateAuthToken(user.getUsername());
     }
 
     /** Удалить пользователями

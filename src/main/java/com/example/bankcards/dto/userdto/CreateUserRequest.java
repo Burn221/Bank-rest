@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record CreateUserRequest (
         @NotNull String username,
         @NotNull String password,
-        @NotNull Role role
+        @NotNull String confirmPassword
 ){
 
 

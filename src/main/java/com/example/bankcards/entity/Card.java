@@ -31,12 +31,18 @@ public class Card {
 
 
     /** Зашифрованый PAN карты*/
-    @Column(name = "pan_encrypted", nullable = false, unique = true)
+    @Column(name = "pan_encrypted", nullable = false)
     private String panEncrypted;
 
     /** 4 последние цифры карты*/
     @Column(name = "pan_last4", nullable = false, length = 4)
     private String panLast4;
+
+    /** Хэш номера карты, нужен для поиска по хэшу в базе данных */
+    @Column(name = "pan_hash", nullable = false, length = 32)
+    @ToString.Exclude
+    private byte[] panHash;
+
 
 
     @Column(name = "owner_name", nullable = false)
