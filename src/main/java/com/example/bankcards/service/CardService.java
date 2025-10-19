@@ -1,6 +1,7 @@
 package com.example.bankcards.service;
 
 import com.example.bankcards.dto.BalanceResponse;
+import com.example.bankcards.dto.CardDTO.BlockCardRequest;
 import com.example.bankcards.dto.CardDTO.CardResponse;
 import com.example.bankcards.dto.CardDTO.CreateCardRequest;
 import com.example.bankcards.dto.CardDTO.UpdateCardRequest;
@@ -36,7 +37,7 @@ public interface CardService {
 
     BalanceResponse showMyBalanceUser(Long userId, Long cardId);
 
-    CardResponse blockRequestUser(Long userId, Long cardId);
+    CardResponse blockRequestUser(Long userId, Long cardId, BlockCardRequest request);
 
 
 

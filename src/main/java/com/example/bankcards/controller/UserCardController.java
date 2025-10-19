@@ -2,6 +2,7 @@ package com.example.bankcards.controller;
 
 
 import com.example.bankcards.dto.BalanceResponse;
+import com.example.bankcards.dto.CardDTO.BlockCardRequest;
 import com.example.bankcards.dto.CardDTO.CardResponse;
 import com.example.bankcards.dto.CardDTO.CreateCardRequest;
 import com.example.bankcards.dto.userdto.AuthUser;
@@ -108,9 +109,9 @@ public class UserCardController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PatchMapping("/block/{cardId}")
     public ResponseEntity<CardResponse> blockMyCard(@AuthenticationPrincipal AuthUser me,
-                                                    @PathVariable Long cardId){
+                                                    @PathVariable Long cardId, @RequestBody BlockCardRequest request){
 
-        return ResponseEntity.ok(cardService.blockRequestUser(me.id(), cardId));
+        return ResponseEntity.ok(cardService.blockRequestUser(me.id(), cardId, request));
     }
 
 

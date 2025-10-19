@@ -1,10 +1,7 @@
 package com.example.bankcards.service.Impl;
 
 import com.example.bankcards.dto.BalanceResponse;
-import com.example.bankcards.dto.CardDTO.CardMapper;
-import com.example.bankcards.dto.CardDTO.CardResponse;
-import com.example.bankcards.dto.CardDTO.CreateCardRequest;
-import com.example.bankcards.dto.CardDTO.UpdateCardRequest;
+import com.example.bankcards.dto.CardDTO.*;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.entity.enums.Status;
@@ -389,12 +386,14 @@ public class CardServiceImpl implements CardService {
       *              </ul>*/
     @Override
     @Transactional
-    public CardResponse blockRequestUser(Long userId, Long cardId) {
+    public CardResponse blockRequestUser(Long userId, Long cardId, BlockCardRequest request) {
 
         Card card= cardRepository.findById(cardId)
                 .orElseThrow(()-> new NotFoundException("Card not found"));
 
-        if(!card.getUser().getId().equals(userId)) throw new ForbiddenTransactionException("User is incorrect or not found");
+        if(!card.getUser().getId().equals(userId)) throw new IllegalArgumentException("User is incorrect or not found");
+
+        if(!request.password().equals(request.confirmPassword())) throw new IllegalArgumentException("Passwords mismatch");
 
         card.setStatus(Status.BLOCKED);
 

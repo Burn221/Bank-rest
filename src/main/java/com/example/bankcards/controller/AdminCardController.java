@@ -37,7 +37,7 @@ public class AdminCardController {
      * @return Возвращает ResponseEntity с телом CardResponse и кодом 201
      * @see CreateCardRequest
      * @see CardResponse
-     * @see CardServiceImpl#createCardAdmin(Long userId,CreateCardRequest) */
+     * @see CardServiceImpl#createCardAdmin(CreateCardRequest) */
     @Operation(summary = "Create card")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/create")
