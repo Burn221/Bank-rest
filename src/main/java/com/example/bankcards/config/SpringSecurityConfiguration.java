@@ -55,7 +55,7 @@ public class SpringSecurityConfiguration {
                                 "/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/me/**").hasRole("USER")
                         .anyRequest().authenticated())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
