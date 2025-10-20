@@ -39,9 +39,10 @@ services:
       - bank_db
       - redis
 
-    environment:
-      SPRING_DATASOURCE_URL: ${DB_URL}
-      JAVA_OPTS: '-Xmx512m'
+    env_file:
+      - .env
+
+
 
 
 
