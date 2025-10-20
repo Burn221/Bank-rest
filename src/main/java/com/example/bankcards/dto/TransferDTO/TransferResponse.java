@@ -4,7 +4,8 @@ import com.example.bankcards.entity.enums.TransferStatus;
 
 import java.time.LocalDateTime;
 
-public record TransferResponse(
+//todo поменять на class и добавить кэширование
+public record TransferResponse (
         Long id,
         Long fromCardId,
         Long toCardId,

@@ -123,12 +123,12 @@ public class TransferServiceImpl implements TransferService {
 
 
         try {
-            byte[] panHash = Hmac.hmacSha256(request.getToPan(),Hmac.hmacKey());
+            byte[] panHash = Hmac.hmacSha256(request.toPan(),Hmac.hmacKey());
             Long toCardId= cardRepository.getCardIdByPanHash(panHash);
             Card toCard = cardRepository.findForUpdate(toCardId)
                     .orElseThrow(() -> new NotFoundException("To Card not found"));
 
-            Card fromCard = cardRepository.findForUpdate(request.getFromCardId())
+            Card fromCard = cardRepository.findForUpdate(request.fromCardId())
                     .orElseThrow(() -> new NotFoundException("From Card not found"));
 
 
@@ -136,21 +136,21 @@ public class TransferServiceImpl implements TransferService {
                 throw new ForbiddenTransactionException("Transfer must be between different users");
             if (fromCard.getId().equals(toCard.getId()))
                 throw new ForbiddenTransactionException("Transfers to the same card are forbidden");
-            if (request.getAmount() <= 0) throw new ForbiddenTransactionException("Transfer amount must be > 0");
+            if (request.amount() <= 0) throw new ForbiddenTransactionException("Transfer amount must be > 0");
             if (!fromCard.getCurrency().equals(toCard.getCurrency()))
                 throw new FailedTransactionException("Currencies mismatch");
             if (!fromCard.getStatus().equals(Status.ACTIVE) || !toCard.getStatus().equals(Status.ACTIVE))
                 throw new FailedTransactionException("Card is not active");
 
 
-            long amount = request.getAmount();
+            long amount = request.amount();
             long amountWithCommission = (amount * 101L + 99L) / 100L;
 
             if (fromCard.getBalanceMinor() < amountWithCommission)
                 throw new ForbiddenTransactionException("Your card has not enough money for transaction");
 
             fromCard.setBalanceMinor(fromCard.getBalanceMinor() - amountWithCommission);
-            toCard.setBalanceMinor(toCard.getBalanceMinor() + request.getAmount());
+            toCard.setBalanceMinor(toCard.getBalanceMinor() + request.amount());
 
             cardRepository.save(fromCard);
             cardRepository.save(toCard);
@@ -158,8 +158,8 @@ public class TransferServiceImpl implements TransferService {
             Transfer transfer = new Transfer();
             transfer.setFromCard(fromCard);
             transfer.setToCard(toCard);
-            transfer.setAmountMinor(request.getAmount());
-            transfer.setCurrency(request.getCurrency());
+            transfer.setAmountMinor(request.amount());
+            transfer.setCurrency(request.currency());
             transfer.setCreatedAt(LocalDateTime.now());
             transfer.setTransferStatus(TransferStatus.SUCCESS);
             transferRepository.save(transfer);
@@ -167,7 +167,7 @@ public class TransferServiceImpl implements TransferService {
             TransferDifferentUsersResponse response = new TransferDifferentUsersResponse();
             response.setFromCardId(fromCard.getId());
             response.setToCardId(toCard.getId());
-            response.setAmount(request.getAmount());
+            response.setAmount(request.amount());
             response.setFromOwnerName(fromCard.getOwnerName());
             response.setToOwnerName(toCard.getOwnerName());
             response.setFromPanMasked(fromCard.getPanLast4());
@@ -178,9 +178,9 @@ public class TransferServiceImpl implements TransferService {
         } catch ( FailedTransactionException  | CannotAcquireLockException
                  | OptimisticLockingFailureException | QueryTimeoutException
                  | RecoverableDataAccessException e) {
-            byte[] panHash= Hmac.hmacSha256(request.getToPan(),Hmac.hmacKey());
+            byte[] panHash= Hmac.hmacSha256(request.toPan(),Hmac.hmacKey());
             Long toId= cardRepository.getCardIdByPanHash(panHash);
-            transferStatusService.markFailed(request.getFromCardId(), toId, request.getAmount(), request.getCurrency());
+            transferStatusService.markFailed(request.fromCardId(), toId, request.amount(), request.currency());
             throw e;
 
         }

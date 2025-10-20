@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,7 +18,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "transfers")
 @Valid
-public class Transfer {
+@RedisHash("Transfer")
+public class Transfer  {
 
     /** id первичный ключ  */
     @Id

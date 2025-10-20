@@ -3,10 +3,11 @@ package com.example.bankcards.dto.CardDTO;
 import com.example.bankcards.entity.enums.Status;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class CardResponse{
+public class CardResponse implements Serializable {
     Long id;
     Long userId;
     String ownerName;

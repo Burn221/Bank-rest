@@ -1,10 +1,7 @@
 package com.example.bankcards.service;
 
 import com.example.bankcards.dto.BalanceResponse;
-import com.example.bankcards.dto.CardDTO.CardMapper;
-import com.example.bankcards.dto.CardDTO.CardResponse;
-import com.example.bankcards.dto.CardDTO.CreateCardRequest;
-import com.example.bankcards.dto.CardDTO.UpdateCardRequest;
+import com.example.bankcards.dto.CardDTO.*;
 import com.example.bankcards.entity.Card;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.entity.enums.Status;
@@ -156,12 +153,14 @@ public class TestCardServiceImpl {
     @Test
     @DisplayName("USER: showMyBalanceUser возвращает баланс своей карты")
     void showMyBalanceUser_ok() {
-        BalanceResponse balance = new BalanceResponse(card.getBalanceMinor(), card.getCurrency());
+        BalanceResponse balance = new BalanceResponse();
+        balance.setCurrentBalance(card.getBalanceMinor());
+        balance.setCurrency(card.getCurrency());
         when(cardRepository.findBalanceUser(10L, 10L)).thenReturn(Optional.of(balance));
 
         BalanceResponse result = service.showMyBalanceUser(10L, 10L);
-        assertThat(result.currentBalance()).isEqualTo(500_00L);
-        assertThat(result.currency()).isEqualTo("KZT");
+        assertThat(result.getCurrentBalance()).isEqualTo(500_00L);
+        assertThat(result.getCurrency()).isEqualTo("KZT");
         verify(cardRepository).findBalanceUser(10L, 10L);
     }
 
@@ -178,12 +177,13 @@ public class TestCardServiceImpl {
     void blockRequestUser_ok() {
         when(cardRepository.findById(10L)).thenReturn(Optional.of(card));
         when(cardRepository.save(any(Card.class))).thenAnswer(inv -> inv.getArgument(0));
+        BlockCardRequest request= new BlockCardRequest("pass","pass");
         CardResponse mapped = new CardResponse();
         mapped.setId(10L);
         mapped.setStatus(Status.BLOCKED);
         when(cardMapper.toResponse(any(Card.class))).thenReturn(mapped);
 
-        CardResponse resp = service.blockRequestUser(10L, 10L);
+        CardResponse resp = service.blockRequestUser(10L, 10L, request);
 
         assertThat(resp.getStatus()).isEqualTo(Status.BLOCKED);
         assertThat(card.getStatus()).isEqualTo(Status.BLOCKED);
@@ -191,11 +191,12 @@ public class TestCardServiceImpl {
     }
 
     @Test
-    @DisplayName("USER: blockRequestUser Forbidden для чужой карты")
+    @DisplayName("USER: blockRequestUser illegal для чужой карты")
     void blockRequestUser_forbidden() {
         when(cardRepository.findById(100L)).thenReturn(Optional.of(card));
-        assertThatThrownBy(() -> service.blockRequestUser(999L, 100L))
-                .isInstanceOf(ForbiddenTransactionException.class);
+        BlockCardRequest request= new BlockCardRequest("pass","pass");
+        assertThatThrownBy(() -> service.blockRequestUser(999L, 100L, request))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     //Admin

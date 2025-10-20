@@ -12,6 +12,7 @@ import com.example.bankcards.repository.UserRepository;
 import com.example.bankcards.security.jwt.JwtService;
 import com.example.bankcards.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +36,6 @@ public class UserServiceImpl implements UserService {
 
     private JwtService jwtService;
 
-    private AuthenticationManager authenticationManager;
 
     /** Осуществляет авторизацию в систему
      * @param dto Принимает UserCredentialsDto который содержит поля: username, password
@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
      * @param username Принимает имя пользователя
      * @throws UsernameNotFoundException если пользователь не найден
      * @return Возвращает UserResponse с полями: id, username, role, enabled, createdAt */
+    @Cacheable(value = "users", key = "#username")
     @Override
     public UserResponse getUserByUsername(String username) {
         User user= repository.findByUsername(username)

@@ -159,7 +159,9 @@ public class TestUserCardController {
     @Test
     @DisplayName("GET /api/me/cards/balance/{cardId} - 200 OK")
     void getMyBalance() throws Exception {
-        BalanceResponse br = new BalanceResponse(500_00L,"KZT");
+        BalanceResponse br = new BalanceResponse();
+        br.setCurrentBalance(500_00L);
+        br.setCurrency("KZT");
 
 
         when(cardService.showMyBalanceUser(10L, 100L)).thenReturn(br);

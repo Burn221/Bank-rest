@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -21,7 +23,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Valid
-public class User {
+@RedisHash("User")
+public class User implements Serializable{
 
     /** id первичный ключ */
     @Id

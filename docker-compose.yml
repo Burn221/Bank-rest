@@ -3,6 +3,16 @@ volumes:
 
 
 services:
+
+  redis:
+    ports:
+      - "6379:6379"
+    image: redis:7
+    container_name: redis_bank
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+
+
   bank_db:
     image: postgres
     restart: always
@@ -25,6 +35,7 @@ services:
 
     depends_on:
       - bank_db
+      - redis
 
     environment:
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://bank_db:5432/bank_db'

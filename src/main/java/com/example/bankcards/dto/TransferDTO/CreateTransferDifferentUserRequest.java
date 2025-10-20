@@ -6,12 +6,13 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 
-@Data
-public class CreateTransferDifferentUserRequest{
-        @NotNull Long fromCardId;
-        @NotNull @Pattern(regexp = "^\\d{13,19}$") String toPan;
-        @NotNull @Positive Long amount;
-        @NotNull @Pattern(regexp = "^[A-Z]{3}$") String currency;
+
+public record CreateTransferDifferentUserRequest(
+        @NotNull Long fromCardId,
+        @NotNull @Pattern(regexp = "^\\d{13,19}$") String toPan,
+        @NotNull @Positive Long amount,
+        @NotNull @Pattern(regexp = "^[A-Z]{3}$") String currency)
+        {
 
 
 

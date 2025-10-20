@@ -16,6 +16,8 @@ import com.example.bankcards.util.Hmac;
 import com.example.bankcards.util.Mask;
 import com.example.bankcards.util.PanGenerator;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -210,6 +212,7 @@ public class CardServiceImpl implements CardService {
 
     @Transactional
     @Override
+    @Cacheable(value = "allCardsAdmin", key = "#userId")
     public Page<CardResponse> showAllCardsAdmin(Pageable pageable, Long userId, Status status, String last4) {
         return cardRepository.findAdminFiltered(userId,status,last4,pageable)
                 .map(card -> {
@@ -237,6 +240,7 @@ public class CardServiceImpl implements CardService {
       *                        <li>createdAt - дата и время создания</li>
       *                    </ul>*/
     @Override
+    @Cacheable(value = "cardsAdmin", key = "#cardId")
     public CardResponse getByIdAdmin(Long cardId) {
         Card card=cardRepository.findById(cardId).orElseThrow(()-> new NotFoundException("Card not found"));
         CardResponse response= mapper.toResponse(card);
@@ -344,6 +348,7 @@ public class CardServiceImpl implements CardService {
       *                        <li>createdAt - дата и время создания</li>
       *                    </ul>*/
     @Override
+    @Cacheable(value = "cards", key = "#userId + ':' + #cardId")
     public CardResponse getMyCardUser(Long cardId, Long userId) {
         Card card= cardRepository.findByIdAndUser_Id(cardId, userId)
                 .orElseThrow(()-> new NotFoundException("Card not found"));
@@ -360,7 +365,8 @@ public class CardServiceImpl implements CardService {
      * @param cardId Принимает id карты
      * @throws NotFoundException Если карта не найдена
      * @return Возвращает BalanceResponse с полями: balance, currency*/
-    @Override
+
+    @Cacheable(value = "balance", key = "#userId + ':' + #cardId")    @Override
     public BalanceResponse showMyBalanceUser(Long userId, Long cardId) {
 
         return cardRepository.findBalanceUser(userId,cardId)
@@ -386,6 +392,8 @@ public class CardServiceImpl implements CardService {
       *              </ul>*/
     @Override
     @Transactional
+    @CacheEvict(value = "cards", key = "#userId + ':' + #cardId")
+
     public CardResponse blockRequestUser(Long userId, Long cardId, BlockCardRequest request) {
 
         Card card= cardRepository.findById(cardId)

@@ -1,8 +1,11 @@
 package com.example.bankcards.dto;
 
-public record BalanceResponse(
-        Long currentBalance,
-        String currency
-) {
+import lombok.Data;
+
+@Data
+public class BalanceResponse {
+        Long currentBalance;
+        String currency;
+
 
 }
